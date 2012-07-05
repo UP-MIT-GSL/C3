@@ -1,5 +1,6 @@
 *.log
-*.pot
+venv
 *.pyc
+*.pot
 local_settings.py
 *~
