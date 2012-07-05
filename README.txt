@@ -13,4 +13,4 @@ Git-hub project URL:
     https://github.com/AITI-Philippines/C3
 
 App prototype URL:
-    
+    http://upcheck.herokuapp.com/
