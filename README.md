@@ -9,11 +9,11 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 ### Prerequisites ###
 
-1. Set-up your git installation. See the tutorial on https://help.github.com/articles/set-up-git
+1. Set-up your git installation. See the tutorial at https://help.github.com/articles/set-up-git
 
     _Make sure to configure your **username** and **email**_
 
-2. Generate an SSH key for your current machine. See the tutorial on https://help.github.com/articles/generating-ssh-keys
+2. Generate an SSH key for your current machine. See the tutorial at https://help.github.com/articles/generating-ssh-keys
 
     _Make sure you add your **SSH key** to your GitHub Account Settings_
 
@@ -45,7 +45,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
         
         `git add .`
         
-        _Hint: `.` indicates the current directory_
+        _Hint: The `.` indicates the current directory_
 
 3. Commit your changes to the history of your repository, and include a useful message
 
