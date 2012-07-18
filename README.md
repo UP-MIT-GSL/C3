@@ -1,13 +1,13 @@
-## About Check-UP ##
+## About Check-UP
 
 **Check-UP: Course Curriculum Checklist** is an Android application made for and by students of the [University of the Philippines Diliman](http://upd.edu.ph/). The application requires the user's registration year and course. It then uses the corresponding curriculum to track the subjects that a student has already taken and has yet to take. It will also display the student's academic standing and give suggestions on which subjects to take for the next semester. Statistics such as General Weighted Average (GWA), units left, years left, P.E.'s left, and more will help the student succeed in school.
 
 Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/wiki). Thanks for checking out our project.
 
 
-## Contributing to Check-UP ##
+## Contributing to Check-UP
 
-### Prerequisites ###
+### Prerequisites
 
 1. Set-up your git installation. See the tutorial at https://help.github.com/articles/set-up-git
 
@@ -18,7 +18,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
     _Make sure you add your **SSH key** to your GitHub Account Settings_
 
     
-### Cloning ###
+### Cloning
 
 1. In the terminal, change to your desired parent directory for the project directory
 
@@ -29,7 +29,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
     `git clone git@github.com:AITI-Philippines/C3.git`
 
 
-### Committing Newly Created Files ###
+### Committing Newly Created Files
 
 1. Change to the project directory
 
@@ -41,7 +41,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
         
         `git add <file>`
 
-    2. Add _multiple_ untracked files to git's listo of tracked files, by added the entire directory contents
+    2. Add _multiple_ untracked files to git's list of tracked files, by adding the entire directory contents
         
         `git add .`
         
@@ -56,17 +56,24 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
     `git push`
 
 
-### Committing Modified Files ###
+### Committing Modified Files
 
 1. Commit add your updates to the history of your repository, and include a useful message
 
     `git commit -a -m "<message>"`
 
-    _Hint: The `-a` flag tells you to automatically add all modified already-tracked files_
+    _Hint: The `-a` flag tells git to automatically add all modified already-tracked files_
 
 2. Update the remote repository in GitHub
 
     `git push`
+    
+    
+### Synchronizing the Local Repository with the Remote Repository
+
+1. Update the repository with data from the remote repository
+
+    `git pull origin master`
 
 
 ## Running the Android Application
