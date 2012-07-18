@@ -1,87 +1,93 @@
 ## About Check-UP ##
-**Check-UP: Course Curriculum Checklist** is an Android application made for and by students of the [University of the Philippines Diliman](http://upd.edu.ph/). The application requires the user's registration year and course. It then uses the corresponding curriculum to track the subjects that a student has already taken and has yet to take. It will also display the student's academic standing and give suggestions on which sujbects to take for the next semesters. Statistics such as General Weighted Average (GWA), units left, years left, P.E.'s left, and more will help the student succeed in school.
 
-Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/wiki). Thanks for checking it out.
+**Check-UP: Course Curriculum Checklist** is an Android application made for and by students of the [University of the Philippines Diliman](http://upd.edu.ph/). The application requires the user's registration year and course. It then uses the corresponding curriculum to track the subjects that a student has already taken and has yet to take. It will also display the student's academic standing and give suggestions on which subjects to take for the next semester. Statistics such as General Weighted Average (GWA), units left, years left, P.E.'s left, and more will help the student succeed in school.
 
-## Contribute to Check-UP ##
+Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/wiki). Thanks for checking out our project.
+
+
+## Contributing to Check-UP ##
 
 ### Prerequisites ###
 
 1. Set-up your git installation according. See the tutorial on https://help.github.com/articles/set-up-git
 
-_Make sure to configure your **username** and **email**_
+    _Make sure to configure your **username** and **email**_
 
 2. Generate an SSH key for your current machine. See the tutorial on https://help.github.com/articles/generating-ssh-keys
 
-_Make sure you add your **SSH key** to your GitHub account's settings_
+    _Make sure you add your **SSH key** to your GitHub account's settings_
 
+    
 ### Cloning ###
 
 1. In the terminal, change to your desired parent directory for the project directory
 
-**cd _directory_**
+    `cd _directory_`
 
 2.  Clone the project
 
-**git clone git@github.com:AITI-Philippines/C3.git**
+    `git clone git@github.com:AITI-Philippines/C3.git`
 
 
 ### Committing Created Files ###
 
-0. Change to the project directory
+1. Change to the project directory
 
-**cd C3**
+    `cd C3`
 
-1. To add a new, _untracked_, file to the repository, add that to git's list of tracked files
+2. Add files to git's list of tracked files
 
-**git add _file_**
+    1. To add a new, _untracked_, file to the repository, add that to git's list of tracked files
+        
+        `git add _file_`
 
-2. To add _multiple_ untracked files to the repository, simply add the entire directory contents
-
-**git add .**
-
-_Hint: '.' indicates the current directory_
+    2. To add _multiple_ untracked files to the repository, simply add the entire directory contents
+        
+        `git add .`
+        
+        _Hint: '.' indicates the current directory_
 
 3. Commit your changes to the history of your repository, and include a useful message
 
-**git commit -m "_message_"**
+    `git commit -m "_message_"`
 
 4. Update the remote repository in GitHub
 
-**git push**
+    `git push`
 
 
 ### Committing Modified Files ###
 
 1. Commit add your updates to the history of your repository, and include a useful message
 
-**git commit -a -m "_message_"**
+    `git commit -a -m "_message_"`
 
-_The '-a' flag tells you to automatically add all modified already-tracked files_
+    _The '-a' flag tells you to automatically add all modified already-tracked files_
 
 2. Update the remote repository in GitHub
 
-**git push**
+    `git push`
 
 
-## Developing the Android Application ##
+## Running the Android Application ##
 
 1. Install the Android SDK and the Eclipse Plugin. See http://developer.android.com/sdk/installing/index.html
 
 2. In Eclipse, import the Check-UP Android project
 
-**File>Import>Android>Existing Android Code Into Workspace**
+    `File>Import>Android>Existing Android Code Into Workspace`
 
-In the following screen, specify the Android application
+    In the following screen, specify the Android application
 
-**Root Directory: _path_\CS 172\C3\Check-UP**
+    Root Directory: `_path_\CS 172\C3\Check-UP`
 
-Select All, and continue
+    Select All projects, and continue
 
 3. Run the application on a real device or an emulator. See http://developer.android.com/training/basics/firstapp/running-app.html
 
 
 ## Developers ##
+
 * Bisais, Apryl Rose (apryl.rose04@gmail.com)
 * Javier, Jewel Lex (lex.javier@gmail.com)
 * Razon, Justine Arnon (arnon.razon@live.com)
