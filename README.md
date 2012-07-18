@@ -1,10 +1,22 @@
+## About Check-UP ##
+
 **Check-UP: Course Curriculum Checklist**
 
-This project is an application made for students of the University of the Philippines Diliman. The application tracks the subjects that a student has already taken. This information will be used to display the student's academic standing and possibly give suggestions on which sujbects to take for the next semesters. Handy functionalities, like a Grade Weighted Average computer, will also be included to help each student.
+This project is an application made _by_ and _for_ students of the [University of the Philippines Diliman](http://upd.edu.ph/). The application requires the user's registration *year* and course. It then uses the corresponding curriculum to track the subjects that a student has already taken and has yet to take. It will also display the student's academic standing and give suggestions on which sujbects to take for the next semesters. Statistics such as General Weighted Average (GWA), units left, years left, P.E.'s left, and more will help the student succeed in school.
+
+Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/wiki). Thanks for checking it out.
+
+## Contribute ##
+
+**Pre-Installation:**
+1. Set-up your git installation according to: https://help.github.com/articles/set-up-git
+_Make sure you configured your username and email_
+2. Generate an SSH key for your current machine according to: https://help.github.com/articles/generating-ssh-keys
+_Make sure you add your SSH key to GitHub_
 
 **Installation:**
-* In the terminal, change or make a directory for the project
-* Clone the project using the command: clone git@github.com:AITI-Philippines/C3.git
+1. In the terminal, change or make a directory for the project
+2.  Clone the project using the command: git clone git@github.com:AITI-Philippines/C3.git
 
 
 **Team members:**
