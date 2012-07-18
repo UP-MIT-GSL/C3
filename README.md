@@ -9,13 +9,13 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 ### Prerequisites ###
 
-1. Set-up your git installation according. See the tutorial on https://help.github.com/articles/set-up-git
+1. Set-up your git installation. See the tutorial on https://help.github.com/articles/set-up-git
 
     _Make sure to configure your **username** and **email**_
 
 2. Generate an SSH key for your current machine. See the tutorial on https://help.github.com/articles/generating-ssh-keys
 
-    _Make sure you add your **SSH key** to your GitHub account's settings_
+    _Make sure you add your **SSH key** to your GitHub Account Settings_
 
     
 ### Cloning ###
@@ -29,7 +29,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
     `git clone git@github.com:AITI-Philippines/C3.git`
 
 
-### Committing Created Files ###
+### Committing Newly Created Files ###
 
 1. Change to the project directory
 
@@ -37,11 +37,11 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 2. Add files to git's list of tracked files
 
-    1. Add a new, _untracked_ to git's list of tracked files
+    1. Add a new, _untracked_, file to git's list of tracked files
         
         `git add <file>`
 
-    2. Add _multiple_ untracked to git's by added the entire directory contents
+    2. Add _multiple_ untracked files to git's listo of tracked files, by added the entire directory contents
         
         `git add .`
         
@@ -69,24 +69,24 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
     `git push`
 
 
-## Running the Android Application ##
+## Running the Android Application
 
-1. Install the Android SDK and the Eclipse Plugin. See http://developer.android.com/sdk/installing/index.html
+1. Install the Android SDK and the Eclipse Plugin. See the tutorial at http://developer.android.com/sdk/installing/index.html
 
 2. In Eclipse, import the Check-UP Android project
 
-    `File>Import>Android>Existing Android Code Into Workspace`
+    `File > Import > Android>Existing Android Code Into Workspace`
 
-    In the following screen, specify the Android application
+    In the following screen, specify the Android application Root Directory
+    
+    `<path>\C3\Check-UP`
 
-    Root Directory: `<path>\C3\Check-UP`
+    Select All projects, and continue
 
-    Select all projects, and continue
-
-3. Run the application on a real device or an emulator. See http://developer.android.com/training/basics/firstapp/running-app.html
+3. Run the application on a real device or an emulator. See the tutorial at http://developer.android.com/training/basics/firstapp/running-app.html
 
 
-## Developers ##
+## Developers
 
 * Bisais, Apryl Rose (apryl.rose04@gmail.com)
 * Javier, Jewel Lex (lex.javier@gmail.com)

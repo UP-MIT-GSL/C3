@@ -9,7 +9,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:padding="@dimen/padding_medium"
-        android:text="@string/hello_world"
+        android:text="@string/title_activity_sign_in"
         tools:context=".SignIn" />
 
 </RelativeLayout>
