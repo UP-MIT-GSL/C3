@@ -22,7 +22,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 1. In the terminal, change to your desired parent directory for the project directory
 
-    `cd _directory_`
+    `cd <directory>`
 
 2.  Clone the project
 
@@ -37,19 +37,19 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 2. Add files to git's list of tracked files
 
-    1. To add a new, _untracked_, file to the repository, add that to git's list of tracked files
+    1. Add a new, _untracked_ to git's list of tracked files
         
-        `git add _file_`
+        `git add <file>`
 
-    2. To add _multiple_ untracked files to the repository, simply add the entire directory contents
+    2. Add _multiple_ untracked to git's by added the entire directory contents
         
         `git add .`
         
-        _Hint: '.' indicates the current directory_
+        _Hint: `.` indicates the current directory_
 
 3. Commit your changes to the history of your repository, and include a useful message
 
-    `git commit -m "_message_"`
+    `git commit -m "<message>"`
 
 4. Update the remote repository in GitHub
 
@@ -60,9 +60,9 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 1. Commit add your updates to the history of your repository, and include a useful message
 
-    `git commit -a -m "_message_"`
+    `git commit -a -m "<message>"`
 
-    _The '-a' flag tells you to automatically add all modified already-tracked files_
+    _Hint: The `-a` flag tells you to automatically add all modified already-tracked files_
 
 2. Update the remote repository in GitHub
 
@@ -79,9 +79,9 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
     In the following screen, specify the Android application
 
-    Root Directory: `_path_\CS 172\C3\Check-UP`
+    Root Directory: `<path>\C3\Check-UP`
 
-    Select All projects, and continue
+    Select all projects, and continue
 
 3. Run the application on a real device or an emulator. See http://developer.android.com/training/basics/firstapp/running-app.html
 
