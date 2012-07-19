@@ -3,8 +3,6 @@ CREATE TABLE 'colleges' (
 	'name' TEXT NOT NULL,
 	UNIQUE('name')
 );
-;
-CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE 'courses' (
 	'course_id' INTEGER PRIMARY KEY AUTOINCREMENT,
 	'name' TEXT NOT NULL,
@@ -12,13 +10,11 @@ CREATE TABLE 'courses' (
 	UNIQUE('name'),
 	FOREIGN KEY('college_id') REFERENCES colleges('college_id')
 );
-;
 CREATE TABLE 'subjecttypes' (
 	'type_id' INTEGER PRIMARY KEY AUTOINCREMENT,
 	'name' TEXT NOT NULL,
 	UNIQUE('name')
 );
-;
 CREATE TABLE 'subjects' (
 	'subject_id' INTEGER PRIMARY KEY AUTOINCREMENT,
 	'name' TEXT NOT NULL,
@@ -35,13 +31,11 @@ CREATE TABLE 'prereqs' (
 	FOREIGN KEY('subject_id') REFERENCES subjects('subject_id'),
 	FOREIGN KEY('prereq_id') REFERENCES subjects('subject_id')
 );
-;
 CREATE TABLE 'status' (
 	'status_id' INTEGER PRIMARY KEY AUTOINCREMENT,
 	'name' TEXT NOT NULL,
 	UNIQUE('name')
 );
-;
 CREATE TABLE 'users' (
 	'username' TEXT PRIMARY KEY,
 	'password' TEXT NOT NULL,
@@ -52,11 +46,9 @@ CREATE TABLE 'users' (
 	FOREIGN KEY('course_id') REFERENCES courses('course_id'),
 	FOREIGN KEY('status_id') REFERENCES status('status_id')
 );
-;
 CREATE TABLE 'takensubjects' (
 	'username' TEXT NOT NULL,
 	'subject_id' INTEGER NOT NULL,
-	'teacher' TEXT,
 	'rating' INTEGER DEFAULT(1),
 	'grade' REAL,
 	'year' INTEGER NOT NULL,
