@@ -82,7 +82,7 @@ Find out more information on our [Wiki](https://github.com/AITI-Philippines/C3/w
 
 2. In Eclipse, import the Check-UP Android project
 
-    `File > Import > Android>Existing Android Code Into Workspace`
+    `File > Import > Android > Existing Android Code Into Workspace`
 
     In the following screen, specify the Android application Root Directory
     
