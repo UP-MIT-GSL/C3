@@ -46,10 +46,11 @@ public class NotepadActivity extends Activity{
     	Cursor c = mDbHelper.getAllColleges();
     	StringBuilder builder = new StringBuilder();
         builder.append("<html><body>");
-        c.moveToFirst();
-        builder.append(c.getString(0)+ "<br>");
-        c.moveToNext();
-        builder.append(c.getString(0)+ "<br>");
+        builder.append(mDbHelper.ifCollegeExists("College of Law") + "<br>" + c.getCount());
+        //c.moveToFirst();
+        //builder.append(c.getString(0)+ "<br>");
+        //c.moveToNext();
+        //builder.append(c.getString(0)+ "<br>");
         builder.append("</body></html>");
 
         mWebView.loadData(builder.toString(), "text/html", "UTF-8");
