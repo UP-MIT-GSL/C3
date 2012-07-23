@@ -24,8 +24,4 @@ public class SignOut extends Activity {
             }
         });
     }
-
-    
-
-    
 }

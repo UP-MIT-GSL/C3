@@ -7,6 +7,9 @@
 
 package ph.edu.upd.check_up;
 
+import android.view.View;
+import android.widget.TabHost.TabContentFactory;
+
 public final class R {
     public static final class attr {
     }
@@ -29,14 +32,21 @@ public final class R {
         public static final int textView2=0x7f080002;
         public static final int textView3=0x7f080005;
         public static final int textView4=0x7f080006;
+		public static int tabHost;
+		public static TabContentFactory tab1;
+		public static TabContentFactory tab2;
+		public static TabContentFactory tab3;
+		public static TabContentFactory tab4;
     }
     public static final class layout {
         public static final int activity_sign_in=0x7f030000;
         public static final int activity_sign_out=0x7f030001;
+		public static View activity_checklist;
     }
     public static final class menu {
-        public static final int activity_sign_in=0x7f070000;
-        public static final int activity_sign_out=0x7f070001;
+        public static final int activity_checklist=0x7f070000;
+        public static final int activity_sign_in=0x7f070001;
+        public static final int activity_sign_out=0x7f070002;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
@@ -48,13 +58,14 @@ public final class R {
         public static final int page_checklist=0x7f050004;
         public static final int page_grades=0x7f050005;
         public static final int page_status=0x7f050006;
-        public static final int password=0x7f050009;
-        public static final int signin=0x7f050007;
-        public static final int signoutmsg=0x7f05000b;
-        public static final int signup=0x7f05000d;
+        public static final int password=0x7f050008;
+        public static final int signin=0x7f050009;
+        public static final int signoutmsg=0x7f05000d;
+        public static final int signup=0x7f05000b;
+        public static final int title_activity_checklist=0x7f05000e;
         public static final int title_activity_sign_in=0x7f050003;
         public static final int title_activity_sign_out=0x7f05000c;
-        public static final int username=0x7f050008;
+        public static final int username=0x7f050007;
     }
     public static final class style {
         public static final int AppTheme=0x7f060000;

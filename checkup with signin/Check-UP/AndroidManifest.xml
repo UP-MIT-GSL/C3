@@ -1,3 +1,4 @@
+<<<<<<< Original
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ph.edu.upd.check_up"
     android:versionCode="1"
@@ -29,6 +30,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Checklist"
+            android:label="@string/title_activity_checklist" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
+=======
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <application>
+        <activity android:name=".Checklist"
+            android:label="@string/title_activity_checklist">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.app.TabActivity" />
+        </activity>
+    </application>
+
+</manifest>
+>>>>>>> Added

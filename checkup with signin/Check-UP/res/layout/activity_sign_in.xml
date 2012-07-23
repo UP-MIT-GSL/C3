@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="SignIn" >
-
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
         android:layout_centerHorizontal="true"
         android:ems="10"
         android:inputType="textShortMessage" />
-
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
 
         <requestFocus />
     </EditText>
-
+
     <Button
         android:id="@+id/btn_signin"
         android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="29dp"
         android:text="@string/signin" />
-
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
         android:layout_below="@+id/btn_signin"
         android:layout_centerHorizontal="true"
         android:text="@string/noaccount" />
-
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
