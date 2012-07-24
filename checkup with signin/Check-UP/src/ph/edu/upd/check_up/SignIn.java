@@ -2,9 +2,7 @@ package ph.edu.upd.check_up;
 
 import android.os.Bundle;
 import android.app.Activity;
-//import android.view.Menu;
-//import android.view.MenuItem;
-//import android.support.v4.app.NavUtils;
+import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -17,10 +15,10 @@ public class SignIn extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         
-        Button launch = (Button)findViewById(R.id.btn_signin);
+        Button button = (Button)findViewById(R.id.btn_signin);
         
         // this is the action listener
-        launch.setOnClickListener( new OnClickListener()
+        button.setOnClickListener( new OnClickListener()
         {
                
         	public void onClick(View viewParam)
@@ -32,20 +30,19 @@ public class SignIn extends Activity {
                 // the getText() gets the current value of the text box
                 // the toString() converts the value to String data type
                 // then assigns it to a variable of type String
-                String UserName = usernameEditText.getText().toString();
-                String Password = passwordEditText.getText().toString();
+                //String UserName = usernameEditText.getText().toString();
+                //String Password = passwordEditText.getText().toString();
                        
                 // catches the error if the program can't locate the GUI stuff
                 if(usernameEditText == null || passwordEditText == null){
-              
-                	//showAlert("Crap!", "Couldn't find the 'txt_username' or 'txt_password' "
-                      //        + "EditView in main.xml", "Oh shit!", false);
+                	//do this
                 } 
                 
-                else{
-                        // display the username and the password in string format
-                        //showAlert("Logging in", "Username: " + UserName + "nPassword: " + Password , "Ok", true);
-                        }
+                else{                        
+                        Intent intent=new Intent(SignIn.this,Checklist.class);
+                        startActivity(intent);
+                                  
+                }
                 }
         });
         
