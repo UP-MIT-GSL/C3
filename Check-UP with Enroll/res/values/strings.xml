@@ -1,0 +1,21 @@
+<resources>
+
+    <string name="app_name">Check-UP</string>
+    <string name="semester">2nd Year, 1st Semester:</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_enroll">Enroll</string>
+    <string name="subject1">GE (SSP)</string>
+    <string name="subject2">Math 54</string>
+    <string name="subject3">CS 30</string>
+    <string name="subject4">CS 21</string>
+    <string name="subject5">CS 32</string>
+    <string name="add">click to add subject</string>
+    <string name="set">Set as Current Subjects</string>
+    <string name="status">Status</string>
+    <string name="checklist">Checklist</string>
+    <string name="history">History</string>
+    <string name="enroll">Enroll</string>
+    <string name="logout">Log-out</string>
+    
+    
+</resources>
