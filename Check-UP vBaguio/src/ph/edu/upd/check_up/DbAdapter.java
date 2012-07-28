@@ -194,7 +194,7 @@ public class DbAdapter {
 	 * @param name - College name
 	 * @return - college id
 	 */
-	private int getCollegeID(String name) {
+	public int getCollegeID(String name) {
 		Cursor c = mDb.rawQuery("SELECT college_id FROM colleges WHERE name='" + name + "'", null);
 		return c.getInt(0);
 	}
@@ -205,7 +205,7 @@ public class DbAdapter {
 	 * @param name - Course name
 	 * @return - course id
 	 */
-	private int getCourseID(String name) {
+	public int getCourseID(String name) {
 		Cursor c = mDb.rawQuery("SELECT course_id FROM courses WHERE name='" + name + "'", null);
 		return c.getInt(0);
 	}
@@ -216,7 +216,7 @@ public class DbAdapter {
 	 * @param name - Subject name
 	 * @return - subject id
 	 */
-	private int getSubjectID(String name) {
+	public int getSubjectID(String name) {
 		Cursor c = mDb.rawQuery("SELECT subject_id FROM subjects WHERE name='" + name + "'", null);
 		return c.getInt(0);
 	}
@@ -227,7 +227,7 @@ public class DbAdapter {
 	 * @param name - Subject type name
 	 * @return - type id
 	 */
-	private int getSubjectTypeID(String name) {
+	public int getSubjectTypeID(String name) {
 		Cursor c = mDb.rawQuery("SELECT type_id FROM subjecttypes WHERE name='" + name + "'", null);
 		return c.getInt(0);
 	}
@@ -238,7 +238,7 @@ public class DbAdapter {
 	 * @param name - Status name
 	 * @return - status id
 	 */
-	private int getStatusID(String name) {
+	public int getStatusID(String name) {
 		Cursor c = mDb.rawQuery("SELECT status_id FROM status WHERE name='" + name + "'", null);
 		return c.getInt(0);
 	}
