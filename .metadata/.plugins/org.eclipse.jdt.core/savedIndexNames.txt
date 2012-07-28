@@ -1,5 +1,0 @@
-INDEX VERSION 1.126+/home/linux/aiti/cs192thyzfarm/C3/.metadata/.plugins/org.eclipse.jdt.core
-1001842384.index
-2147293171.index
-426279585.index
-1387548784.index
