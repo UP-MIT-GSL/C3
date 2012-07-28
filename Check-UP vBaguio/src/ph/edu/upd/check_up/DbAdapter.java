@@ -721,6 +721,25 @@ public class DbAdapter {
 	}
 	
 	/**
+	 * Gets all of the information of each taken subject by the specified username, year, and semester
+	 * @param username - the student's username
+	 * @param year - the year of the subject taken
+	 * @param sem - the semester of the subject taken
+	 * @return a Cursor with the columns: subject, units, type, college, rating, grade, year, semester
+	 * @throws UsernameNotFoundException if the username is not in the users table
+	 */
+	public Cursor getAllTakenSubjects(String username, int year, int sem) {
+		Cursor c = null;
+		if (this.ifUserExists(username)) {
+			c = mDb.rawQuery("SELECT s.name AS subject, s.units, r.name AS type, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id AND t.year=" + year + " AND t.sem=" + sem + " ORDER BY t.year", null);
+		} else {
+			//TO DO
+			//throw UsernameNotFoundException
+		}
+		return c;
+	}
+	
+	/**
 	 * Gets all of the information of each UNTAKEN subject by the specified username
 	 * @param username - the student's username
 	 * @return a Cursor with the columns: subject, units, type, college, rating, grade, year, semester
@@ -788,6 +807,24 @@ public class DbAdapter {
 			//throw CourseNameNotFoundException
 		}
 		return c;
+	}
+	
+	/**
+	 * Gets number of units of the specified username, year, semester
+	 * @param username - the student's username
+	 * @param subjecttype - the type of the subject
+	 * @return a Cursor with the columns: subject, units, type, college, rating, grade, year, semester
+	 * @throws UsernameNotFoundException if the username is not in the users table
+	 */
+	public int getUnitsInSemester(String username, int year, int semester) {
+		Cursor c = null;
+		if (this.ifUserExists(username)) {
+			c = mDb.rawQuery("SELECT COUNT(s.units) FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id AND t.year=" + year + " AND t.sem=" + semester + " ORDER BY t.year", null);
+		} else {
+			//TO DO
+			//throw UsernameNotFoundException
+		}
+		return c.getInt(0);
 	}
 	
 	/**

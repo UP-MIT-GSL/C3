@@ -14,7 +14,7 @@ CREATE TABLE "courses" (
 
 CREATE TABLE "subjecttypes" (
 	"type_id" INTEGER PRIMARY KEY AUTOINCREMENT,
-	"name" TEXT NOT NULL,
+	"name" TEXT,
 	UNIQUE("name")
 );
 
