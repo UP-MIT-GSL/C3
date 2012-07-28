@@ -36,6 +36,14 @@ CREATE TABLE "prereqs" (
 	FOREIGN KEY("prereq_id") REFERENCES subjects("subject_id")
 );
 
+CREATE TABLE "coreqs" (
+	"subject_id" INTEGER,
+	"coreq_id" INTEGER,
+	UNIQUE("subject_id","coreq_id"),
+	FOREIGN KEY("subject_id") REFERENCES subjects("subject_id"),
+	FOREIGN KEY("coreq_id") REFERENCES subjects("subject_id")
+);
+
 CREATE TABLE "status" (
 	"status_id" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"name" TEXT NOT NULL,
