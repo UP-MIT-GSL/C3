@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dip">
+        
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Username"
+            android:id="@+id/edit_username"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="UP Webmail"
+            android:inputType="textEmailAddress"
+            android:id="@+id/edit_up_webmail"/>
+                   
+		<EditText android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:hint="Student Number"
+		    android:inputType="number"
+		    android:id="@+id/edit_student_number" />
+
+		<AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Course"
+            android:id="@+id/autocomplete_course"/>
+		
+		<AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Status (e.g. Regular)"
+            android:id="@+id/autocomplete_status" />
+        
+		<EditText android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:id="@+id/edit_password"/>
+        
+        <EditText android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password Confirmation"
+            android:inputType="textPassword"
+            android:id="@+id/edit_password_confirmation"/>
+		
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign-UP"
+            android:id="@+id/button_sign_up"/>
+    </LinearLayout>
+</ScrollView>
