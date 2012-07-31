@@ -11,116 +11,204 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
-        android:text="@string/semester"
         tools:context=".Enroll" />
 
-	<TextView
+    <TableRow>
+
+    <TextView
 	    android:id="@+id/subject1"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:clickable="True"
 	    android:padding="@dimen/padding_medium"
-	    android:text="@string/subject1"
 	    tools:context=".Enroll" />
-
+        
 	<TextView
+	    android:id="@+id/unit1"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:clickable="True"
+	    android:padding="@dimen/padding_medium"
+	    tools:context=".Enroll" />
+	
+    </TableRow>
+
+    <TableRow>
+
+    <TextView
 	    android:id="@+id/subject2"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:clickable="True"
 	    android:padding="@dimen/padding_medium"
-	    android:text="@string/subject2"
 	    tools:context=".Enroll" />
 
+    <TextView
+	    android:id="@+id/unit2"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:clickable="True"
+	    android:padding="@dimen/padding_medium"
+	    tools:context=".Enroll" />
+	
+    </TableRow>
+
+    <TableRow>
+	
 	<TextView
         android:id="@+id/subject3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
-        android:text="@string/subject3"
         android:clickable="True"
         tools:context=".Enroll" />
-
+    
 	<TextView
+        android:id="@+id/unit3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+	
+    </TableRow>
+
+    <TableRow>
+
+    <TextView
         android:id="@+id/subject4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
-        android:text="@string/subject4"
         android:clickable="True"
         tools:context=".Enroll" />
-		
-	<TextView
+	
+    <TextView
+        android:id="@+id/unit4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+	
+    </TableRow>
+	
+    <TableRow>
+
+   	<TextView
         android:id="@+id/subject5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
-        android:text="@string/subject5"
         android:clickable="True"
         tools:context=".Enroll" />
+
+  	<TextView
+        android:id="@+id/unit5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+   	
+    </TableRow>
 		
-	<TextView
+    <TableRow>
+
+    <TextView
         android:id="@+id/subject6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_medium"
-        android:text="@string/add"
         android:clickable="True"
         tools:context=".Enroll" />
-	
+    
+    <TextView
+        android:id="@+id/unit6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    </TableRow>
+
+    <TableRow>
+
+    <TextView
+        android:id="@+id/subject7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    <TextView
+        android:id="@+id/unit7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    </TableRow>
+
+    <TableRow>
+
+    <TextView
+        android:id="@+id/subject8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    <TextView
+        android:id="@+id/unit8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    </TableRow>
+    		
+	<TableRow>
+	    
+    <TableRow>
+
+    <TextView
+        android:id="@+id/subject9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    <TextView
+        android:id="@+id/unit9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_medium"
+        android:clickable="True"
+        tools:context=".Enroll" />
+    
+    </TableRow>
+    	    
+	<Button
+	    android:id="@+id/add"
+	    android:layout_marginTop="10dip"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:text="@string/add" />
+
 	<Button
 	    android:id="@+id/set"
 	    android:layout_marginTop="10dip"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:text="@string/set" />
-    
-	<TableRow>
-
-	    <Button
-	        android:id="@+id/status"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dip"
-	        android:layout_weight="1"
-	        android:textSize="12dip"
-	        android:text="@string/status" />
-
-	    <Button
-	        android:id="@+id/checklist"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dip"
-	        android:layout_weight="1"
-	        android:textSize="9.5dip"
-	        android:text="@string/checklist" />
-
-	    <Button
-	        android:id="@+id/history"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dip"
-	        android:layout_weight="1"
-	        android:textSize="12dip"
-	        android:text="@string/history" />
-
-	    <Button
-	        android:id="@+id/enroll"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dip"
-	        android:layout_weight="1"
-	        android:textSize="12dip"
-	        android:text="@string/enroll" />
-
-	    <Button
-	        android:id="@+id/logout"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="5dip"
-	        android:layout_weight="1"
-	        android:textSize="9.5dip"
-	        android:text="@string/logout" />
+	
 	</TableRow>
 	
 </TableLayout>

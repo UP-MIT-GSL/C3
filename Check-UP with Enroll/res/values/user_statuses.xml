@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<array name="user_statuses">
+	<item>Regular</item>
+	<item>Graduating</item>
+	<item>Leave of Absence</item>
+	<item>Non-Degree</item>
+	<item>Non-Major</item>
+	<item>Residency</item>
+</array>
+</resources>
