@@ -25,7 +25,7 @@ CREATE TABLE "gsubjects" (
 );
 
 CREATE TABLE "ssubjects" (
-	"s_subject_id" INTEGER PRIMARY KEY AUTOINCREMENT,
+	"subject_id" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"name" TEXT NOT NULL,
 	"units" INTEGER NOT NULL,
 	"g_subject_id" INTEGER NOT NULL,

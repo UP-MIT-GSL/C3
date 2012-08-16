@@ -286,6 +286,210 @@ public class DbAdapter {
 		mDb.execSQL(DATABASE_CREATE14);
 	}
 	
+	
+	//if methods
+	/**
+	 * Checks if the college exists in the database
+	 * @param name - the name of the college
+	 * @return - true if the college is in the colleges table
+	 */
+	public boolean ifCollegeExists(String name){
+		Cursor c = mDb.rawQuery("SELECT * FROM colleges WHERE name='" + name + "'", null);
+		if (c.getCount() <= 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the course exists in the database
+	 * @param name - the name of the course
+	 * @return - true if the course is in the courses table
+	 */
+	public boolean ifCourseExists(String name) {
+		Cursor c = mDb.rawQuery("SELECT * FROM courses WHERE name='" + name + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the subject type exists in the database
+	 * @param name - the type of the subject
+	 * @return - true if the subject type is in the subjecttypes table
+	 */
+	public boolean ifSubjectTypeExists(String name) {
+		Cursor c = mDb.rawQuery("SELECT * FROM subjecttypes WHERE name='" + name + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the general subject exists in the database
+	 * @param name - the name of the subject
+	 * @return - true if the subject is in the gsubjects table
+	 */
+	public boolean ifGeneralSubjectExists(String name) {
+		Cursor c = mDb.rawQuery("SELECT * FROM gsubjects WHERE name='" + name + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the specific subject exists in the database
+	 * @param name - the name of the subject
+	 * @return - true if the subject is in the ssubjects table
+	 */
+	public boolean ifSpecificSubjectExists(String name) {
+		Cursor c = mDb.rawQuery("SELECT * FROM ssubjects WHERE name='" + name + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if a subject is a prerequisite of another
+	 * @param subject - the subject to be checked of
+	 * @param prerequisite - the prerequisite of the subject to be checked of
+	 * @return - true if the subject has the given prerequisite subject
+	 */
+	public boolean ifPrerequisiteSubject(String subject, String prerequisite) {
+		Cursor c = mDb.rawQuery("SELECT a.prereq_id FROM prereqs a, ssubjects b WHERE a.subject_id=b.subject_id AND b.name='" + subject + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		} else {
+			c.moveToFirst();
+			Cursor cc = mDb.rawQuery("SELECT * FROM prereqs a, ssubjects b WHERE a.prereq_id=b.subject_id AND b.name='" + prerequisite + "' AND a.prereq_id=" + c.getInt(0), null);
+			if (cc.getCount() == 1) {
+				return true;
+			}
+			while (c.moveToNext()) {
+				cc = mDb.rawQuery("SELECT * FROM prereqs a, ssubjects b WHERE a.prereq_id=b.subject_id AND b.name='" + prerequisite + "' AND a.prereq_id=" + c.getInt(0), null);
+				if (cc.getCount() == 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the status exists in the database
+	 * @param name - the student's status
+	 * @return - true if the status is in the status table
+	 */
+	public boolean ifStatusExists(String name) {
+		Cursor c = mDb.rawQuery("SELECT * FROM status WHERE name='" + name + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the username is in the database
+	 * @param username - the student's username
+	 * @return - true if the username is in the users table
+	 */
+	public boolean ifUserExists(String username) {
+		Cursor c = mDb.rawQuery("SELECT * FROM users WHERE username='" + username + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the user already has taken the given subject
+	 * @param username - the student's username
+	 * @param subject - the subject to be checked if the student has taken it
+	 * @return - true if the username and subject exists in the takensubjects table
+	 */
+	public boolean ifTakenSubject(String username, String subject) {
+		Cursor c = mDb.rawQuery("SELECT subject_id FROM takensubjects WHERE username='" + username + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		} else {
+			c.moveToFirst();
+			Cursor cc = mDb.rawQuery("SELECT * FROM ssubjects s, takensubjects t WHERE t.username='" + username + "' AND s.subject_id=" + c.getInt(0) + " AND s.name='" + subject + "'", null);
+			if (cc.getCount() == 1) {
+				return true;
+			}
+			while (c.moveToNext()) {
+				cc = mDb.rawQuery("SELECT * FROM ssubjects s, takensubjects t WHERE t.username='" + username + "' AND s.subject_id=" + c.getInt(0) + " AND s.name='" + subject + "'", null);
+				if (cc.getCount() == 1) {
+					return true;
+				}
+			}
+		}
+		return true;
+	}
+	
+	
+	public boolean ifCurriculumExists(String course, int year) {
+		//TO DO
+	}
+	
+	/**
+	 * Checks if a subject is a corequisite of another
+	 * @param subject - the subject to be checked of
+	 * @param prerequisite - the corequisite of the subject to be checked of
+	 * @return - true if the subject has the given corequisite subject
+	 */
+	public boolean ifCorequisiteSubject(String subject, String corequisite) {
+		Cursor c = mDb.rawQuery("SELECT a.coreq_id FROM coreqs a, ssubjects b WHERE a.subject_id=b.subject_id AND b.name='" + subject + "'", null);
+		if (c.getCount() == 0) {
+			return false;
+		} else {
+			c.moveToFirst();
+			Cursor cc = mDb.rawQuery("SELECT * FROM prereqs a, ssubjects b WHERE a.prereq_id=b.subject_id AND b.name='" + corequisite + "' AND a.coreq_id=" + c.getInt(0), null);
+			if (cc.getCount() == 1) {
+				return true;
+			}
+			while (c.moveToNext()) {
+				cc = mDb.rawQuery("SELECT * FROM prereqs a, ssubjects b WHERE a.prereq_id=b.subject_id AND b.name='" + corequisite + "' AND a.coreq_id=" + c.getInt(0), null);
+				if (cc.getCount() == 1) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the username and password is correct
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public boolean ifValidUser(String username, String password) {
+		if (this.ifUserExists(username)) {
+			Cursor c = mDb.rawQuery("SELECT username, password FROM users WHERE username='" + username + "'", null);
+			if (c.getString(0).contentEquals(username) && c.getString(1).contentEquals(password)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the given subject is in a course curriculum
+	 * @param subject - the student's subject
+	 * @param course - the student's course
+	 * @return - true if the subject is in the course
+	 */
+	public boolean ifSubjectInCurriculum(String subject, String course) {
+		//TO DO
+	}
+	
+	
+	//get methods
 	/**
 	 * CHECK name existence in the colleges table before using
 	 * Gets the college_id column of the specified name
@@ -596,179 +800,6 @@ public class DbAdapter {
 		initialValues.put(KEY_CURRICULUM_YEAR, yeartobetaken);
 		initialValues.put(KEY_CURRICULUM_SEMESTER, semtobetaken);
 		return mDb.insert(TABLENAMES[8], null, initialValues);
-	}
-	
-	/**
-	 * Checks if the college exists in the database
-	 * @param name - the name of the college
-	 * @return - true if the college is in the colleges table
-	 */
-	public boolean ifCollegeExists(String name){
-		Cursor c = mDb.rawQuery("SELECT * FROM colleges WHERE name='" + name + "'", null);
-		if (c.getCount() <= 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if the course exists in the database
-	 * @param name - the name of the course
-	 * @return - true if the course is in the courses table
-	 */
-	public boolean ifCourseExists(String name) {
-		Cursor c = mDb.rawQuery("SELECT * FROM courses WHERE name='" + name + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if the subject exists in the database
-	 * @param name - the name of the subject
-	 * @return - true if the subject is in the subjects table
-	 */
-	public boolean ifSubjectExists(String name) {
-		Cursor c = mDb.rawQuery("SELECT * FROM subjects WHERE name='" + name + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if the subject type exists in the database
-	 * @param name - the type of the subject
-	 * @return - true if the subject type is in the subjecttypes table
-	 */
-	public boolean ifSubjectTypeExists(String name) {
-		Cursor c = mDb.rawQuery("SELECT * FROM subjecttypes WHERE name='" + name + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if the status exists in the database
-	 * @param name - the student's status
-	 * @return - true if the status is in the status table
-	 */
-	public boolean ifStatusExists(String name) {
-		Cursor c = mDb.rawQuery("SELECT * FROM status WHERE name='" + name + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if a subject is a prerequisite of another
-	 * @param subject - the subject to be checked of
-	 * @param prerequisite - the prerequisite of the subject to be checked of
-	 * @return - true if the subject has the given prerequisite subject
-	 */
-	public boolean ifPrerequisiteSubject(String subject, String prerequisite) {
-		Cursor c = mDb.rawQuery("SELECT a.prereq_id FROM prereqs a, subjects b WHERE a.subject_id=b.subject_id AND b.name='" + subject + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		} else {
-			c.moveToFirst();
-			Cursor cc = mDb.rawQuery("SELECT * FROM prereqs a, subjects b WHERE a.prereq_id=b.subject_id AND b.name='" + prerequisite + "' AND a.prereq_id=" + c.getInt(0), null);
-			if (cc.getCount() == 1) {
-				return true;
-			}
-			while (c.moveToNext()) {
-				cc = mDb.rawQuery("SELECT * FROM prereqs a, subjects b WHERE a.prereq_id=b.subject_id AND b.name='" + prerequisite + "' AND a.prereq_id=" + c.getInt(0), null);
-				if (cc.getCount() == 1) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if the username is in the database
-	 * @param username - the student's username
-	 * @return - true if the username is in the users table
-	 */
-	public boolean ifUserExists(String username) {
-		Cursor c = mDb.rawQuery("SELECT * FROM users WHERE username='" + username + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * Checks if the user already has taken the given subject
-	 * @param username - the student's username
-	 * @param subject - the subject to be checked if the student has taken it
-	 * @return - true if the username and subject exists in the takensubjects table
-	 */
-	public boolean ifTakenSubject(String username, String subject) {
-		Cursor c = mDb.rawQuery("SELECT subject_id FROM takensubjects WHERE username='" + username + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		} else {
-			c.moveToFirst();
-			Cursor cc = mDb.rawQuery("SELECT * FROM subjects s, takensubjects t WHERE t.username='" + username + "' AND s.subject_id=" + c.getInt(0) + " AND s.name='" + subject + "'", null);
-			if (cc.getCount() == 1) {
-				return true;
-			}
-			while (c.moveToNext()) {
-				cc = mDb.rawQuery("SELECT * FROM subjects s, takensubjects t WHERE t.username='" + username + "' AND s.subject_id=" + c.getInt(0) + " AND s.name='" + subject + "'", null);
-				if (cc.getCount() == 1) {
-					return true;
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	/**
-	 * Checks if the username and password is correct
-	 * @param username
-	 * @param password
-	 * @return
-	 */
-	public boolean ifValidUser(String username, String password) {
-		if (this.ifUserExists(username)) {
-			Cursor c = mDb.rawQuery("SELECT username, password FROM users WHERE username='" + username + "'", null);
-			if (c.getString(0).contentEquals(username) && c.getString(1).contentEquals(password)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if the given subject is in a course curriculum
-	 * @param subject - the student's subject
-	 * @param course - the student's course
-	 * @return - true if the subject is in the course
-	 */
-	public boolean ifSubjectInCurriculum(String subject, String course) {
-		Cursor c = mDb.rawQuery("SELECT subject_id FROM curriculum c, courses d WHERE c.course_id=d.course_id AND d.name='" + course + "'", null);
-		if (c.getCount() == 0) {
-			return false;
-		} else {
-			c.moveToFirst();
-			Cursor cc = mDb.rawQuery("SELECT * FROM curriculum c, subjects s WHERE s.subject_id=c.subject_id AND s.name='" + subject + "' AND s.subject_id=" + c.getInt(0), null);
-			if (cc.getCount() == 1) {
-				return true;
-			}
-			while (c.moveToNext()) {
-				cc = mDb.rawQuery("SELECT * FROM curriculum c, subjects s WHERE s.subject_id=c.subject_id AND s.name='" + subject + "' AND s.subject_id=" + c.getInt(0), null);
-				if (cc.getCount() == 1) {
-					return true;
-				}
-			}
-		}
-		return true;
 	}
 	
 	/**
