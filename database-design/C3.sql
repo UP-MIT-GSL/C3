@@ -30,7 +30,7 @@ CREATE TABLE "ssubjects" (
 	"units" INTEGER NOT NULL,
 	"g_subject_id" INTEGER NOT NULL,
 	UNIQUE("name"),
-	FOREIGN KEY("g_subject_id") REFERENCES subjecttypes("g_subject_id")
+	FOREIGN KEY("g_subject_id") REFERENCES gsubjects("g_subject_id")
 );
 
 CREATE TABLE "prereqs" (
@@ -107,7 +107,7 @@ CREATE TABLE "majors" (
 	"takesem" INTEGER NOT NULL,
 	UNIQUE("subject_id", "curriculum_id"),
 	FOREIGN KEY("subject_id") REFERENCES ssubjects("s_subject_id"),
-	FOREIGN KEY("curriculum_id") REFERENCES curruculum("curriculum_id")
+	FOREIGN KEY("curriculum_id") REFERENCES curriculum("curriculum_id")
 );
 
 CREATE TABLE "nonmajors" (
@@ -117,5 +117,5 @@ CREATE TABLE "nonmajors" (
 	"takesem" INTEGER NOT NULL,
 	UNIQUE("subject_id", "curriculum_id"),
 	FOREIGN KEY("subject_id") REFERENCES gsubjects("g_subject_id"),
-	FOREIGN KEY("curriculum_id") REFERENCES curruculum("curriculum_id")
+	FOREIGN KEY("curriculum_id") REFERENCES curriculum("curriculum_id")
 );

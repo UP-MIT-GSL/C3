@@ -12,14 +12,20 @@ public class DbAdapter {
 	 * (0 = colleges)
 	 * (1 = courses)
 	 * (2 = subjecttypes)
-	 * (3 = subjects)
-	 * (4 = prereqs)
-	 * (5 = status)
-	 * (6 = users)
-	 * (7 = takensubjects)
-	 * (8 = curriculum)
+	 * (3 = gsubjects)
+	 * (4 = ssubjects)
+	 * (5 = prereqs)
+	 * (6 = status)
+	 * (7 = users)
+	 * (8 = takensubjects)
+	 * (9 = curriculum)
+	 * (10 = coreqs)
+	 * (11 = session)
+	 * (12 = tags)
+	 * (13 = majors)
+	 * (14 = nonmajors)
 	 */
-	public static final String[] TABLENAMES = {"colleges", "courses", "subjecttypes", "subjects", "prereqs", "status", "users", "takensubjects", "curriculum"};
+	public static final String[] TABLENAMES = {"colleges", "courses", "subjecttypes", "gsubjects", "ssubjects", "prereqs", "status", "users", "takensubjects", "curriculum", "coreqs", "session", "tags", "majors", "nonmajors"};
 	//colleges table column names
 	public static final String KEY_COLLEGES_COLLEGEID = "college_id";
 	public static final String KEY_COLLEGES_NAME = "name";
@@ -30,12 +36,14 @@ public class DbAdapter {
 	//subjecttypes table column names
 	public static final String KEY_SUBJECTTYPES_TYPEID = "type_id";
 	public static final String KEY_SUBJECTTYPES_NAME = "name";
-	//subjects table column names
-	public static final String KEY_SUBJECTS_SUBJECTID = "subject_id";
-	public static final String KEY_SUBJECTS_NAME = "name";
-	public static final String KEY_SUBJECTS_UNITS = "units";
-	public static final String KEY_SUBJECTS_TYPEID = "type_id";
-	public static final String KEY_SUBJECTS_COLLEGEID = "college_id";
+	//gsubjects table column names
+	public static final String KEY_GSUBJECTS_SUBJECTID = "g_subject_id";
+	public static final String KEY_GSUBJECTS_NAME = "name";
+	//ssubjects table column names
+	public static final String KEY_SSUBJECTS_SUBJECTID = "subject_id";
+	public static final String KEY_SSUBJECTS_NAME = "name";
+	public static final String KEY_SSUBJECTS_UNITS = "units";
+	public static final String KEY_SSUBJECTS_GENERALID = "g_subject_id";
 	//prereqs table column names
 	public static final String KEY_PREREQS_SUBJECTID = "subject_id";
 	public static final String KEY_PREREQS_PREREQID = "prereq_id";
@@ -47,11 +55,13 @@ public class DbAdapter {
 	public static final String KEY_USERS_PASSWORD = "password";
 	public static final String KEY_USERS_STUDENTNO = "student_no";
 	public static final String KEY_USERS_NAME = "name";
+	public static final String KEY_USERS_WEBMAIL = "webmail";
 	public static final String KEY_USERS_COURSEID = "course_id";
 	public static final String KEY_USERS_STATUSID = "status_id";
 	//takensubjects table column names
 	public static final String KEY_TAKENSUBJECTS_USERNAME = "username";
 	public static final String KEY_TAKENSUBJECTS_SUBJECTID = "subject_id";
+	public static final String KEY_TAKENSUBJECTS_TEACHER = "teacher";
 	public static final String KEY_TAKENSUBJECTS_RATING = "rating";
 	public static final String KEY_TAKENSUBJECTS_GRADE = "grade";
 	public static final String KEY_TAKENSUBJECTS_YEAR = "year";
@@ -60,7 +70,25 @@ public class DbAdapter {
 	public static final String KEY_CURRICULUM_COURSEID = "course_id";
 	public static final String KEY_CURRICULUM_SUBJECTID = "subject_id";
 	public static final String KEY_CURRICULUM_YEAR = "year";
-	public static final String KEY_CURRICULUM_SEMESTER = "semester";
+	//coreqs table column names
+	public static final String KEY_COREQS_SUBJECTID = "subject_id";
+	public static final String KEY_COREQS_PREREQID = "coreq_id";
+	//session table column names
+	public static final String KEY_SESSION_USERNAME = "username";
+	//tags table column names
+	public static final String KEY_TAGS_SUBJECTID = "subject_id";
+	public static final String KEY_TAGS_TYPEID = "type_id";
+	//majors table column names
+	public static final String KEY_MAJORS_SUBJECTID = "subject_id";
+	public static final String KEY_MAJORS_CURRICULUMID = "curriculum_id";
+	public static final String KEY_MAJORS_TAKEYEAR = "takeyear";
+	public static final String KEY_MAJORS_TAKESEM = "takesem";
+	//nonmajors table column names
+	public static final String KEY_NONMAJORS_SUBJECTID = "subject_id";
+	public static final String KEY_NONMAJORS_CURRICULUMID = "curriculum_id";
+	public static final String KEY_NONMAJORS_TAKEYEAR = "takeyear";
+	public static final String KEY_NONMAJORS_TAKESEM = "takesem";
+	
 	
 	private static final String TAG = "DbAdapter";
 	private DatabaseHelper mDbHelper;
@@ -69,39 +97,42 @@ public class DbAdapter {
 	/**
 	 * Database schema
 	 */
-	private static final String DATABASE_CREATE1 =
+	private static final String DATABASE_CREATE0 =
 			"CREATE TABLE 'colleges' (" +
 			"	'college_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
 			"	'name' TEXT NOT NULL," +
 			"	UNIQUE('name'));";
-	private static final String DATABASE_CREATE2 =
+	private static final String DATABASE_CREATE1 =
 			"CREATE TABLE 'courses' (" +
 			"	'course_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
 			"	'name' TEXT NOT NULL," +
 			"	'college_id' INTEGER," +
 			"	UNIQUE('name')," +
 			"	FOREIGN KEY('college_id') REFERENCES colleges('college_id'));";
-	private static final String DATABASE_CREATE3 =
+	private static final String DATABASE_CREATE2 =
 			"CREATE TABLE 'subjecttypes' (" +
 			"	'type_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
 			"	'name' TEXT NOT NULL," +
 			"	UNIQUE('name'));";
+	private static final String DATABASE_CREATE3 =
+			"CREATE TABLE 'gsubjects' (" +
+			"	'g_subject_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
+			"	'name' TEXT NOT NULL," +
+			"	UNIQUE('name'));";
 	private static final String DATABASE_CREATE4 =
-			"CREATE TABLE 'subjects' (" +
-			"	'subject_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
+			"CREATE TABLE 'ssubjects' (" +
+			"	's_subject_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
 			"	'name' TEXT NOT NULL," +
 			"	'units' INTEGER NOT NULL," +
-			"	'type_id' INTEGER NOT NULL," +
-			"	'college_id' INTEGER NOT NULL," +
-			"	FOREIGN KEY('type_id') REFERENCES subjecttypes('type_id')," +
-			"	FOREIGN KEY('college_id') REFERENCES colleges('college_id'));";
+			"	'g_subject_id' INTEGER NOT NULL," +
+			"	FOREIGN KEY('g_subject_id') REFERENCES gsubjects('g_subject_id'));";
 	private static final String DATABASE_CREATE5 =
 			"CREATE TABLE 'prereqs' (" +
 			"	'subject_id' INTEGER," +
 			"	'prereq_id' INTEGER," +
 			"	UNIQUE('subject_id', 'prereq_id')," +
-			"	FOREIGN KEY('subject_id') REFERENCES subjects('subject_id')," +
-			"	FOREIGN KEY('prereq_id') REFERENCES subjects('subject_id'));";
+			"	FOREIGN KEY('subject_id') REFERENCES ssubjects('s_subject_id')," +
+			"	FOREIGN KEY('prereq_id') REFERENCES ssubjects('s_subject_id'));";
 	private static final String DATABASE_CREATE6 =
 			"CREATE TABLE 'status' (" +
 			"	'status_id' INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -113,6 +144,7 @@ public class DbAdapter {
 			"	'password' TEXT NOT NULL," +
 			"	'student_no' INTEGER NOT NULL," +
 			"	'name' TEXT," +
+			"	'webmail' TEXT," +
 			"	'course_id' INTEGER NOT NULL," +
 			"	'status_id' INTEGER NOT NULL," +
 			"	FOREIGN KEY('course_id') REFERENCES courses('course_id')," +
@@ -121,20 +153,56 @@ public class DbAdapter {
 			"CREATE TABLE 'takensubjects' (" +
 			"	'username' TEXT NOT NULL," +
 			"	'subject_id' INTEGER NOT NULL," +
-			"	'rating' INTEGER," +
+			"	'teacher' TEXT," +
+			"	'rating' INTEGER DEFAULT(1)," +
 			"	'grade' REAL," +
 			"	'year' INTEGER NOT NULL," +
 			"	'semester' INTEGER NOT NULL," +
 			"	FOREIGN KEY('username') REFERENCES users('username')," +
-			"	FOREIGN KEY('subject_id') REFERENCES subjects('subject_id'));";
+			"	FOREIGN KEY('subject_id') REFERENCES ssubjects('s_subject_id'));";
 	private static final String DATABASE_CREATE9 =
 			"CREATE TABLE 'curriculum' (" +
 			"	'course_id' INTEGER NOT NULL," +
 			"	'subject_id' INTEGER NOT NULL," +
 			"	'year' INTEGER," +
-			"	'semester' INTEGER NOT NULL," +
-			"	FOREIGN KEY('course_id') REFERENCES courses('course_id')," +
-			"	FOREIGN KEY('subject_id') REFERENCES subjects('subject_id'));";
+			"	UNIQUE('curriculum_id', 'year', 'course_id')," +
+			"	FOREIGN KEY('course_id') REFERENCES courses('course_id'));";
+	private static final String DATABASE_CREATE10 =
+			"CREATE TABLE 'coreqs' (" +
+			"	'subject_id' INTEGER," +
+			"	'coreq_id' INTEGER," +
+			"	UNIQUE('subject_id', 'coreq_id')," +
+			"	FOREIGN KEY('subject_id') REFERENCES ssubjects('s_subject_id')," +
+			"	FOREIGN KEY('coreq_id') REFERENCES ssubjects('s_subject_id'));";
+	private static final String DATABASE_CREATE11 =
+			"CREATE TABLE 'session' (" +
+			"	'username' TEXT NOT NULL," +
+			"	FOREIGN KEY('username') REFERENCES users('username'));";
+	private static final String DATABASE_CREATE12 =
+			"CREATE TABLE 'tags' (" +
+			"	'subject_id' INTEGER NOT NULL," +
+			"	'type_id' INTEGER NOT NULL," +
+			"	UNIQUE('subject_id', 'type_id')," +
+			"	FOREIGN KEY('subject_id') REFERENCES gsubjects('g_subject_id')," +
+			"	FOREIGN KEY('type_id') REFERENCES subjecttypes('type_id'));";
+	private static final String DATABASE_CREATE13 = 
+			"CREATE TABLE 'majors' (" +
+			"	'subject_id' INTEGER NOT NULL," +
+			"	'curriculum_id' INTEGER NOT NULL," +
+			"	'takeyear' INTEGER NOT NULL," +
+			"	'takesem' INTEGER NOT NULL," +
+			"	UNIQUE('subject_id', 'curriculum_id')," +
+			"	FOREIGN KEY('subject_id'), REFERENCES ssubjects('s_subject_id')," +
+			"	FOREIGN KEY('curriculum_id'), REFERENCES curriculum('curriculum_id'));";
+	private static final String DATABASE_CREATE14 =
+			"CREATE TABLE 'nonmajors' (" +
+			"	'subject_id' INTEGER NOT NULL," +
+			"	'curriculum_id' INTEGER NOT NULL," +
+			"	'takeyear' INTEGER NOT NULL," +
+			"	'takesem' INTEGER NOT NULL," +
+			"	UNIQUE('subject_id', 'curriculum_id')," +
+			"	FOREIGN KEY('subject_id'), REFERENCES gsubjects('g_subject_id')," +
+			"	FOREIGN KEY('curriculum_id'), REFERENCES curriculum('curriculum_id'));";
 	
 	
 	/**
@@ -151,9 +219,10 @@ public class DbAdapter {
 		}
 		
 		public void onCreate(SQLiteDatabase db) {
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < TABLENAMES.length(); i++) {
 				db.execSQL("DROP TABLE IF EXISTS " + TABLENAMES[i] + ";");
 			}
+			db.execSQL(DATABASE_CREATE0);
 			db.execSQL(DATABASE_CREATE1);
 			db.execSQL(DATABASE_CREATE2);
 			db.execSQL(DATABASE_CREATE3);
@@ -163,6 +232,11 @@ public class DbAdapter {
 			db.execSQL(DATABASE_CREATE7);
 			db.execSQL(DATABASE_CREATE8);
 			db.execSQL(DATABASE_CREATE9);
+			db.execSQL(DATABASE_CREATE10);
+			db.execSQL(DATABASE_CREATE11);
+			db.execSQL(DATABASE_CREATE12);
+			db.execSQL(DATABASE_CREATE13);
+			db.execSQL(DATABASE_CREATE14);
 		}
 		
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -195,6 +269,7 @@ public class DbAdapter {
 		for (int i = 0; i < TABLENAMES.length; i++) {
 			mDb.execSQL("DROP TABLE IF EXISTS " + TABLENAMES[i] + ";");
 		}
+		mDb.execSQL(DATABASE_CREATE0);
 		mDb.execSQL(DATABASE_CREATE1);
 		mDb.execSQL(DATABASE_CREATE2);
 		mDb.execSQL(DATABASE_CREATE3);
@@ -204,6 +279,11 @@ public class DbAdapter {
 		mDb.execSQL(DATABASE_CREATE7);
 		mDb.execSQL(DATABASE_CREATE8);
 		mDb.execSQL(DATABASE_CREATE9);
+		mDb.execSQL(DATABASE_CREATE10);
+		mDb.execSQL(DATABASE_CREATE11);
+		mDb.execSQL(DATABASE_CREATE12);
+		mDb.execSQL(DATABASE_CREATE13);
+		mDb.execSQL(DATABASE_CREATE14);
 	}
 	
 	/**
@@ -231,13 +311,25 @@ public class DbAdapter {
 	}
 	
 	/**
-	 * CHECK name existence in the subjects table before using
+	 * CHECK name existence in the gsubjects table before using
+	 * Gets the g_subject_id column of the specified name
+	 * @param name - Subject name
+	 * @return - subject id
+	 */
+	public int getGeneralSubjectID(String name) {
+		Cursor c = mDb.rawQuery("SELECT g_subject_id FROM gsubjects WHERE name='" + name + "'", null);
+		c.moveToFirst();
+		return c.getInt(0);
+	}
+	
+	/**
+	 * CHECK name existence in the ssubjects table before using
 	 * Gets the subject_id column of the specified name
 	 * @param name - Subject name
 	 * @return - subject id
 	 */
-	public int getSubjectID(String name) {
-		Cursor c = mDb.rawQuery("SELECT subject_id FROM subjects WHERE name='" + name + "'", null);
+	public int getSpecificSubjectID(String name) {
+		Cursor c = mDb.rawQuery("SELECT subject_id FROM ssubjects WHERE name='" + name + "'", null);
 		c.moveToFirst();
 		return c.getInt(0);
 	}
@@ -267,36 +359,25 @@ public class DbAdapter {
 	}
 	
 	/**
-	 * Gets the Subject type of the specified subject
+	 * Gets the Subject types (tags) of the specified subject
 	 * @param subject
 	 * @return - the type of the subject
 	 * @throws SubjectNameNotFoundException - if the subject is not in the subjects table
 	 */
-	public String getSubjectType(String subject) {
-		if (!this.ifSubjectExists(subject)) {
-			//TO DO
-			//throw SubjectNameNotFoundException
-		}
-		Cursor c = mDb.rawQuery("SELECT t.name FROM subjects s, subjecttypes t WHERE t.type_id=s.type_id AND s.name='" + subject + "'", null);
-		c.moveToFirst();
-		return c.getString(0);
+	public String[] getSubjectTypes(String subject) {
+		//TO DO
 	}
 	
 	/**
 	 * Gets the year and the semester of the subject in the course curriculum
 	 * @param subject - existing subject in the curriculum table
 	 * @param course - existing course in the curriculum table
+	 * @param curriculum - the year of the curriculum to be used
 	 * @return Cursor - with the columns year, semester
 	 * @throws SubjectNotInCurriculumException - if the subject is not in the curriculum table
 	 */
-	public Cursor getSubjectYearSemester(String subject, String course) {
-		if (!this.ifSubjectInCurriculum(subject, course)) {
-			//TO DO
-			//throw SubjectNotInCurriculumException
-		}
-		Cursor c = mDb.rawQuery("SELECT year, semester FROM curriculum WHERE subject_id=" + getSubjectID(subject) + " AND course_id=" + getCourseID(course), null);
-		c.moveToFirst();
-		return c;
+	public Cursor getSubjectYearSemester(String subject, String course, int curriculum) {
+		//TO DO
 	}
 	
 	/**
@@ -311,7 +392,7 @@ public class DbAdapter {
 			//TO DO
 			//throw SubjectNameNotFoundException
 		}
-		Cursor c = mDb.rawQuery("SELECT s.name FROM subjects s, prereqs p WHERE s.subject_id=p.prereq_id AND p.subject_id=" + getSubjectID(subject), null);
+		Cursor c = mDb.rawQuery("SELECT s.name FROM ssubjects s, prereqs p WHERE s.subject_id=p.prereq_id AND p.subject_id=" + getSubjectID(subject), null);
 		if (c.getCount() == 0) {
 			//TO DO
 			//throw SubjectNoPrerequisitesException
@@ -358,31 +439,17 @@ public class DbAdapter {
 	}
 	
 	/**
-	 * Adds a new subject
-	 * @param name - Subject name (ie. CS 172, Math 17, etc.)
+	 * Adds a new specific subject
+	 * @param specificname - the specific Subject name (ie. CS 172, Math 17, etc.)
 	 * @param units - Subject's number of units
-	 * @param type - existing subject type in the subjecttypes table
-	 * @param college - existing college name in the colleges table
+	 * @param generalname - existing generalname in the gsubjects table (ie. Major, GE, PE, CWTS, etc.)
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
-	 * @throws SubjectTypeNotFoundException - if the subject type is not in the subjecttypes table
-	 * @throws CollegeNameNotFoundException - if the college is not in the colleges table
 	 */
-	public long addSubject(String name, int units, String type, String college) {
+	public long addSpecificSubject(String specificname, int units, String generalname) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(KEY_SUBJECTS_NAME, name);
+		initialValues.put(KEY_SUBJECTS_NAME, specificname);
 		initialValues.put(KEY_SUBJECTS_UNITS, units);
-		if (this.ifSubjectTypeExists(type)) {
-			initialValues.put(KEY_SUBJECTS_TYPEID, getSubjectTypeID(type));
-		} else {
-			//TO DO
-			//throw SubjectTypeNotFoundException
-		}
-		if (this.ifCollegeExists(college)) {
-			initialValues.put(KEY_SUBJECTS_COLLEGEID, getCollegeID(college));
-		} else {
-			//TO DO
-			//throw CollegeNameNotFoundException
-		}
+		//TO DO
 		return mDb.insert(TABLENAMES[3], null, initialValues);
 	}
 	
