@@ -82,19 +82,6 @@ public class Login extends Activity {
 			mDbHelper.addSubjectType("CWTS");
 			mDbHelper.addSubjectType("PE");
 			
-			mDbHelper.addSubject("Comm 3", 3, "GE(AH)", "College of Arts and Letters");
-			mDbHelper.addSubject("Kas 1", 3, "GE(SSP)", "College of Social Sciences and Philosophy");
-			mDbHelper.addSubject("Physics 10", 3, "GE(MST)", "College of Science");
-			mDbHelper.addSubject("Math 17", 5, "Major", "College of Science");
-			mDbHelper.addSubject("CS 11", 3, "Major", "College of Engineering");
-			mDbHelper.addSubject("PE2 MJG", 0, "PE", "College of Human Kinetics");
-			mDbHelper.addSubject("Eng 1", 3, "GE(AH)", "College of Arts and Letters");
-			mDbHelper.addSubject("Kas 2", 3, "GE(SSP)", "College of Social Sciences and Philosophy");
-			mDbHelper.addSubject("GE 1", 3, "GE(MST)", "College of Science");
-			mDbHelper.addSubject("Math 53", 5, "Major", "College of Science");
-			mDbHelper.addSubject("CS 12", 3, "Major", "College of Engineering");
-			mDbHelper.addSubject("PE2 BRD", 0, "PE", "College of Human Kinetics");
-			
 			if (mDbHelper.ifCourseExists("BS Computer Science")) {
 				mDbHelper.addCurriculumSubject("BS Computer Science", "Comm 3", 1, 1);
 				mDbHelper.addCurriculumSubject("BS Computer Science", "Kas 1", 1, 1);
