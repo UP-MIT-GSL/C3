@@ -379,7 +379,7 @@ public class DbAdapter {
 	 */
 	public boolean ifTakenPrerequisites(String username, String subject) {
 		int ctr = 0;
-		String[] prereqs = this.toStringArray(this.getSubjectPrerequisites(subject));
+		String[] prereqs = this.getSubjectPrerequisites(subject);
 		String[] taken = this.toStringArray(this.getAllTakenSubjects(username));
 		for (int i = 0; i < prereqs.length; i++) {
 			for (int j = 0; j < taken.length; j++) {
@@ -451,11 +451,11 @@ public class DbAdapter {
 	 * @param course - the student's course
 	 * @param year - the year that the curriculum takes effect
 	 * @return - true if the subject is in the course's curriculum
-	 * @throws SpecificSubjectNotFoundException - if the subject is not in the ssubjects table
+	 * @throws SubjectNotFoundException - if the subject is not in the ssubjects table or gsubjects table
 	 */
 	public boolean ifSubjectInCurriculum(String subject, String course, int year) {
-		if (!this.ifSpecificSubjectExists(subject)) {
-			//throw SpecificSubjectNotFoundException
+		if (!this.ifSpecificSubjectExists(subject) && !this.ifGeneralSubjectExists(subject) ) {
+			//throw SubjectNotFoundException
 		}
 		String[] subjects = this.toStringArray(this.getCurriculumSubjects(course, year));
 		for (int i = 0; i < subjects.length; i++) {
@@ -500,7 +500,7 @@ public class DbAdapter {
 	 */
 	public boolean ifTakenCorequisites(String username, String subject) {
 		int ctr = 0;
-		String[] coreqs = this.toStringArray(this.getSubjectCorequisites(subject));
+		String[] coreqs = this.getSubjectCorequisites(subject);
 		String[] taken = this.toStringArray(this.getAllTakenSubjects(username));
 		for (int i = 0; i < coreqs.length; i++) {
 			for (int j = 0; j < taken.length; j++) {
@@ -514,9 +514,9 @@ public class DbAdapter {
 	
 	/**
 	 * Checks if the username and password is correct
-	 * @param username
-	 * @param password
-	 * @return
+	 * @param username - current user of the application
+	 * @param password - the password entered by the user
+	 * @return - true if the user has entered the correct password
 	 */
 	public boolean ifValidUser(String username, String password) {
 		if (this.ifUserExists(username)) {
@@ -532,7 +532,7 @@ public class DbAdapter {
 	 * Checks if the subject has the tag (subjecttype) specified
 	 * @param subject - the subject to be checked
 	 * @param tag - the subject type to be checked
-	 * @return 
+	 * @return - true if the subject has the specified subject type
 	 */
 	public boolean ifSubjectHasTag(String subject, String tag) {
 		String[] tags = this.toStringArray(this.getAllSubjectTags(subject));
@@ -550,7 +550,6 @@ public class DbAdapter {
 	 * @param grade - the specified grade to be reached
 	 * @return true if the grade can be reached
 	 * @throws UsernameNotFoundException if the username is not in the users table
-	 * @throws NoGradesToComputeException if the takensubjects table is empty for the username
 	 */
 	public boolean ifPossibleLaude(String username, float grade) {
 		int totalunits = 0;
@@ -558,10 +557,7 @@ public class DbAdapter {
 		if (this.ifUserExists(username)) {
 			Cursor c1 = this.getAllTakenSubjects(username);
 			Cursor c2 = this.getAllUntakenSubjects(username);
-			if (c1.getCount() == 0) {
-				//TO DO
-				//throw NoGradesToComputeException
-			}
+
 			c1.moveToFirst();
 			if (!c1.isNull(c1.getColumnIndex("grade"))) {
 				totalunits += c1.getInt(c1.getColumnIndex("units"));
@@ -585,10 +581,35 @@ public class DbAdapter {
 				}
 			}
 		} else {
-			//TO DO
 			//throw UsernameNotFoundException
 		}
 		return sum/totalunits <= grade;
+	}
+	
+	
+	//has methods
+	/**
+	 * Checks if the specified subjects has at least 1 prerequisite
+	 * @param subject - subject to be checked of prerequisites
+	 * @return
+	 */
+	public boolean hasPrerequisites(String subject) {
+		if (this.getSubjectPrerequisites(subject).length > 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if the specified subjects has at least 1 corequisite
+	 * @param subject - subject to be checked of prerequisites
+	 * @return
+	 */
+	public boolean hasCorequisites(String subject) {
+		if (this.getSubjectCorequisites(subject).length > 0) {
+			return true;
+		}
+		return false;
 	}
 	
 	
@@ -597,7 +618,7 @@ public class DbAdapter {
 	 * Gets the college_id column of the specified name
 	 * @param name - College name
 	 * @return - college id
-	 * @throws CollegeNotFoundException
+	 * @throws CollegeNotFoundException - if the college name is not in the colleges table
 	 */
 	public int getCollegeID(String name) {
 		if (!this.ifCollegeExists(name)) {
@@ -612,7 +633,7 @@ public class DbAdapter {
 	 * Gets the course_id column of the specified name
 	 * @param name - Course name
 	 * @return - course id
-	 * @throws CourseNotFoundException
+	 * @throws CourseNotFoundException - if the course name is not in the courses table
 	 */
 	public int getCourseID(String name) {
 		if (!this.ifCourseExists(name)) {
@@ -627,7 +648,7 @@ public class DbAdapter {
 	 * Gets the type_id column of the specified name
 	 * @param name - Subject type name
 	 * @return - type id
-	 * @throws SubjectTypeNotFoundException
+	 * @throws SubjectTypeNotFoundException - if the subject type is not in the subjecttypes table
 	 */
 	public int getSubjectTypeID(String name) {
 		if (!this.ifSubjectTypeExists(name)) {
@@ -642,7 +663,7 @@ public class DbAdapter {
 	 * Gets the g_subject_id column of the specified name
 	 * @param name - Subject name
 	 * @return - subject id
-	 * @throws GeneralSubjectNotFoundException
+	 * @throws GeneralSubjectNotFoundException - if the general subject name is not in the gsubjects table
 	 */
 	public int getGeneralSubjectID(String name) {
 		if (!this.ifGeneralSubjectExists(name)) {
@@ -657,7 +678,7 @@ public class DbAdapter {
 	 * Gets the subject_id column of the specified name
 	 * @param name - Subject name
 	 * @return - subject id
-	 * @throws SpecificSubjectNotFoundException
+	 * @throws SpecificSubjectNotFoundException - if the specific subject name is not in the ssubjects table
 	 */
 	public int getSpecificSubjectID(String name) {
 		if (!this.ifSpecificSubjectExists(name)) {
@@ -672,7 +693,7 @@ public class DbAdapter {
 	 * Gets the status_id column of the specified name
 	 * @param name - Status name
 	 * @return - status id
-	 * @throws StatusNotFoundException
+	 * @throws StatusNotFoundException - if the status name is not in the status table
 	 */
 	public int getStatusID(String name) {
 		if (!this.ifStatusExists(name)) {
@@ -683,17 +704,39 @@ public class DbAdapter {
 		return c.getInt(0);
 	}
 	
-	
+	/**
+	 * Gets the curriculum_id column of the specified course and year
+	 * @param course - Course name
+	 * @param year - year when the curriculum is effective
+	 * @return - curriculum id
+	 * @throws CourseNotFoundException - if the course name is not in the courses table
+	 * @throws CurriculumNotFoundException - if the course to year pair is not in the curriculum table
+	 */
+	public int getCurriculumID(String course, int year) {
+		if (!this.ifCourseExists(course)) {
+			//throw CourseNotFoundException
+		}
+		if (!this.ifCurriculumExists(course, year)) {
+			//throw CurriculumNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT curriculum_id FROM curriculum WHERE course_id=" + this.getCourseID(course) + " AND year=" + year, null);
+		c.moveToFirst();
+		return c.getInt(0);
+	}
 	
 	/**
-	 * Gets the Subject types (tags) of the specified subject
-	 * @param subject
+	 * Gets the Subject types (tags) of the specified subject (only general subjects have tags)
+	 * @param subject - Subject name
 	 * @return - the type of the subject
-	 * @throws SubjectNameNotFoundException - if the subject is not in the subjects table
+	 * @throws GeneralSubjectNameNotFoundException - if the subject is not in the gsubjects table
 	 */
 	public String[] getSubjectTags(String subject) {
-		//TO DO
-		return new String[1];
+		if (!this.ifGeneralSubjectExists(subject)) {
+			//throw GeneralSubjectNameNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT s.name FROM subjecttypes s, tags t WHERE s.type_id=t.type_id AND t.subject_id=" + this.getGeneralSubjectID(subject), null);
+		c.moveToFirst();
+		return this.toStringArray(c);
 	}
 	
 	/**
@@ -705,74 +748,103 @@ public class DbAdapter {
 	 * @throws SubjectNotInCurriculumException - if the subject is not in the curriculum table
 	 */
 	public Cursor getSubjectYearSemester(String subject, String course, int curriculum) {
-		//TO DO
-		return null;
-	}
-	
-	/**
-	 * Gets the prerequisites of the specified subject.
-	 * @param subject - subject to be checked of prerequisites
-	 * @return - names of the prerequisites
-	 * @throws SubjectNameNotFoundException - if the subject is not in the subjects table
-	 * @throws SubjectNoPrerequisitesException - if the subject does not have any prerequisites
-	 */
-	public Cursor getSubjectPrerequisites(String subject) {
-		if (!this.ifSpecificSubjectExists(subject)) {
-			//TO DO
-			//throw SubjectNameNotFoundException
+		if (!this.ifSubjectInCurriculum(subject, course, curriculum)) {
+			//throw SubjectNotInCurriculumException
 		}
-		Cursor c = mDb.rawQuery("SELECT s.name FROM ssubjects s, prereqs p WHERE s.subject_id=p.prereq_id AND p.subject_id=" + getSpecificSubjectID(subject), null);
-		if (c.getCount() == 0) {
-			//TO DO
-			//throw SubjectNoPrerequisitesException
+		Cursor c = null;
+		if (this.ifGeneralSubjectExists(subject)) {
+			c = mDb.rawQuery("SELECT takeyear AS year, takesem AS semester FROM nonmajors WHERE subject_id=" + this.getGeneralSubjectID(subject) + " AND curriculum_id=" + this.getCurriculumID(course, curriculum), null);
+		} else if (this.ifSpecificSubjectExists(subject)) {
+			c = mDb.rawQuery("SELECT takeyear AS year, takesem AS semester FROM majors WHERE subject_id=" + this.getSpecificSubjectID(subject) + " AND curriculum_id=" + this.getCurriculumID(course, curriculum), null);
 		}
 		c.moveToFirst();
 		return c;
 	}
 	
-	public Cursor getSubjectCorequisites(String subject) {
-		//TO DO
-		return null;
+	/**
+	 * Gets the prerequisites of the specified subject.
+	 * @param subject - subject to be checked of prerequisites
+	 * @return - names of the prerequisites. returns an empty array of none
+	 * @throws SpecificSubjectNameNotFoundException - if the subject is not in the ssubjects table
+	 */
+	public String[] getSubjectPrerequisites(String subject) {
+		if (!this.ifSpecificSubjectExists(subject)) {
+			//throw SubjectNameNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT s.name FROM ssubjects s, prereqs p WHERE s.subject_id=p.prereq_id AND p.subject_id=" + getSpecificSubjectID(subject), null);
+		c.moveToFirst();
+		return this.toStringArray(c);
+	}
+	
+	/**
+	 * Gets the prerequisites of the specified subject.
+	 * @param subject - subject to be checked of corequisites
+	 * @return - names of the corequisites. returns an empty array of none
+	 * @throws SpecificSubjectNameNotFoundException - if the subject is not in the ssubjects table
+	 */
+	public String[] getSubjectCorequisites(String subject) {
+		if (!this.ifSpecificSubjectExists(subject)) {
+			//throw SubjectNameNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT s.name FROM ssubjects s, coreqs p WHERE s.subject_id=p.coreq_id AND p.subject_id=" + getSpecificSubjectID(subject), null);
+		c.moveToFirst();
+		return this.toStringArray(c);
 	}
 	
 	/**
 	 * Gets all the names of the colleges in the database
-	 * @return a Cursor with the column 'name'
+	 * @return a String array containing the college names
 	 */
-	public Cursor getAllColleges() {
-		return mDb.rawQuery("SELECT name FROM " + TABLENAMES[0], null);
+	public String[] getAllColleges() {
+		return this.toStringArray(mDb.rawQuery("SELECT name FROM " + TABLENAMES[0], null));
 	}
 	
 	/**
 	 * Gets all the names of the courses in the database
-	 * @return a Cursor with the column 'name'
+	 * @return a String array containing the course names
 	 */
-	public Cursor getAllCourses() {
-		return mDb.rawQuery("SELECT name FROM " + TABLENAMES[1], null);
+	public String[] getAllCourses() {
+		return this.toStringArray(mDb.rawQuery("SELECT name FROM " + TABLENAMES[1], null));
 	}
 	
 	/**
 	 * Gets all the names of the subject types in the database
-	 * @return a Cursor with the column 'name'
+	 * @return a String array containing the subject type names
 	 */
-	public Cursor getAllSubjectTypes() {
-		return mDb.rawQuery("SELECT name FROM " + TABLENAMES[2], null);
+	public String[] getAllSubjectTypes() {
+		return this.toStringArray(mDb.rawQuery("SELECT name FROM " + TABLENAMES[2], null));
+	}
+	
+	/**
+	 * Gets all the names of the general subjects in the database
+	 * @return a String array containing the general subject names
+	 */
+	public String[] getAllGeneralSubjects() {
+		return this.toStringArray(mDb.rawQuery("SELECT name FROM " + TABLENAMES[3], null));
+	}
+	
+	/**
+	 * Gets all the names of the specific subjects in the database
+	 * @return a String array containing the general subject names
+	 */
+	public String[] getAllSpecificSubjects() {
+		return this.toStringArray(mDb.rawQuery("SELECT name FROM " + TABLENAMES[4], null));
 	}
 	
 	/**
 	 * Gets all the names of the statuses in the database
-	 * @return a Cursor with the column 'name'
+	 * @return a String array containing the status names
 	 */
-	public Cursor getAllStatuses() {
-		return mDb.rawQuery("SELECT name FROM " + TABLENAMES[5], null);
+	public String[] getAllStatuses() {
+		return this.toStringArray(mDb.rawQuery("SELECT name FROM " + TABLENAMES[6], null));
 	}
 	
 	/**
 	 * Gets all the names of the users in the database
-	 * @return a Cursor with the column 'name'
+	 * @return a String array containing the usernames
 	 */
-	public Cursor getAllUsers() {
-		return mDb.rawQuery("SELECT username FROM " + TABLENAMES[4], null);
+	public String[] getAllUsers() {
+		return this.toStringArray(mDb.rawQuery("SELECT username FROM " + TABLENAMES[7], null));
 	}
 	
 	/**
@@ -784,9 +856,8 @@ public class DbAdapter {
 	public Cursor getAllTakenSubjects(String username) {
 		Cursor c = null;
 		if (this.ifUserExists(username)) {
-			c = mDb.rawQuery("SELECT s.name AS subject, s.units, r.name AS type, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id ORDER BY t.year", null);
+			c = mDb.rawQuery("SELECT s.name AS subject, s.units, q.name AS college, t.rating, t.grade, t.year, t.semester FROM users u, takensubjects t, ssubjects s, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.college_id=q.college_id ORDER BY t.year", null);
 		} else {
-			//TO DO
 			//throw UsernameNotFoundException
 		}
 		c.moveToFirst();
@@ -804,9 +875,8 @@ public class DbAdapter {
 	public Cursor getAllTakenSubjects(String username, int year, int sem) {
 		Cursor c = null;
 		if (this.ifUserExists(username)) {
-			c = mDb.rawQuery("SELECT s.name AS subject, s.units, r.name AS type, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id AND t.year=" + year + " AND t.sem=" + sem + " ORDER BY t.year", null);
+			c = mDb.rawQuery("SELECT s.name AS subject, s.units, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.college_id=q.college_id AND t.year=" + year + " AND t.sem=" + sem + " ORDER BY t.year", null);
 		} else {
-			//TO DO
 			//throw UsernameNotFoundException
 		}
 		c.moveToFirst();
@@ -822,9 +892,8 @@ public class DbAdapter {
 	public Cursor getAllUntakenSubjects(String username) {
 		Cursor c = null;
 		if (this.ifUserExists(username)) {
-			c = mDb.rawQuery("SELECT s.name AS subject, s.units, r.name AS type, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id!=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id ORDER BY t.year", null);
-		} else {
 			//TO DO
+		} else {
 			//throw UsernameNotFoundException
 		}
 		c.moveToFirst();
