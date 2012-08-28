@@ -457,7 +457,7 @@ public class DbAdapter {
 		if (!this.ifSpecificSubjectExists(subject) && !this.ifGeneralSubjectExists(subject) ) {
 			//throw SubjectNotFoundException
 		}
-		String[] subjects = this.toStringArray(this.getCurriculumSubjects(course, year));
+		String[] subjects = this.getAllCurriculumSubjects(course, year);
 		for (int i = 0; i < subjects.length; i++) {
 			if (subjects[i].equalsIgnoreCase(subject)) {
 				return true;
@@ -535,7 +535,7 @@ public class DbAdapter {
 	 * @return - true if the subject has the specified subject type
 	 */
 	public boolean ifSubjectHasTag(String subject, String tag) {
-		String[] tags = this.toStringArray(this.getAllSubjectTags(subject));
+		String[] tags = this.getAllSubjectTags(subject);
 		for (int i = 0; i < tags.length; i++) {
 			if (tags[i].equalsIgnoreCase(tag)) {
 				return true;
@@ -884,6 +884,7 @@ public class DbAdapter {
 	}
 	
 	/**
+	 * NOT YET IMPLEMENTED
 	 * Gets all of the information of each UNTAKEN subject by the specified username
 	 * @param username - the student's username
 	 * @return a Cursor with the columns: subject, units, type, college, rating, grade, year, semester
@@ -896,7 +897,7 @@ public class DbAdapter {
 		} else {
 			//throw UsernameNotFoundException
 		}
-		c.moveToFirst();
+		//c.moveToFirst();
 		return c;
 	}
 	
@@ -910,9 +911,8 @@ public class DbAdapter {
 	public Cursor getAllTakenSubjects(String username, String subjecttypes) {
 		Cursor c = null;
 		if (this.ifUserExists(username)) {
-			c = mDb.rawQuery("SELECT s.name AS subject, s.units, r.name AS type, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id AND r.name='" + subjecttypes + "' ORDER BY t.year", null);
+			c = mDb.rawQuery("SELECT s.name AS subject, s.units, q.name AS college, t.rating, t.grade, t.year, t.semester FROM users u, takensubjects t, ssubjects s, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.college_id=q.college_id ORDER BY t.year", null);
 		} else {
-			//TO DO
 			//throw UsernameNotFoundException
 		}
 		c.moveToFirst();
@@ -929,60 +929,114 @@ public class DbAdapter {
 	public Cursor getAllUntakenSubjects(String username, String subjecttypes) {
 		Cursor c = null;
 		if (this.ifUserExists(username)) {
-			c = mDb.rawQuery("SELECT s.name AS subject, s.units, r.name AS type, q.name AS college, t.rating, t.grade, t.year, t.semester  FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id!=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id AND r.name='" + subjecttypes + "' ORDER BY t.year", null);
-		} else {
 			//TO DO
+		} else {
 			//throw UsernameNotFoundException
 		}
-		c.moveToFirst();
+		//c.moveToFirst();
 		return c;
 	}
 	
-	public Cursor getAllSubjectTags(String subject) {
-		//TO DO
-		return null;
+	/**
+	 * Gets all the tags of the specified subject
+	 * @param subject - the specific subject to be checked of tags
+	 * @return a String array containing the tags of the subject. null if subject has no tags
+	 * @throws GeneralSubjectNotFoundException if the general subject is not in the gsubjects table
+	 */
+	public String[] getAllSubjectTags(String subject) {
+		if (!this.ifGeneralSubjectExists(subject)) {
+			//throw GeneralSubjectNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT t.name FROM subjecttypes s, tags t, gsubjects g WHERE g.g_subject_id=t.subject_id AND t.type_id=s.type_id AND g.name='" + subject + "'", null);
+		c.moveToFirst();
+		return this.toStringArray(c);
 	}
+	
+	/**
+	 * Gets all the major subjects for the specified course and year of the curriculum
+	 * @param course - the course of the curriculum
+	 * @param year - the year the curriculum is made
+	 * @return - a String array containing the major(specific) subject names. null if there are no major subjects
+	 * @throws CourseNameNotFoundException if the course if not in the courses table
+	 * @throws CurriculumNotFoundException if the curriculum is not in the curriculum table
+	 */
+	public String[] getAllCurriculumMajorSubjects(String course, int year) {
+		if (!this.ifCourseExists(course)) {
+			//throw CourseNameNotFoundException
+		}
+		if (!this.ifCurriculumExists(course, year)) {
+			//throw CurriculumNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT s.name, m.takeyear, m.takesem FROM majors m, ssubjects s WHERE m.curriculum_id=" + this.getCurriculumID(course, year) + "m.subject_id=s.subject_id", null);
+		c.moveToFirst();
+		return this.toStringArray(c);
+	}
+	
+	/**
+	 * Gets all the minor subjects for the specified course and year of the curriculum
+	 * @param course - the course of the curriculum
+	 * @param year - the year the curriculum is made
+	 * @return - a String array containing the minor(general) subject names. null if there are no major subjects
+	 * @throws CourseNameNotFoundException if the course if not in the courses table
+	 * @throws CurriculumNotFoundException if the curriculum is not in the curriculum table
+	 */
+	public String[] getAllCurriculumMinorSubjects(String course, int year) {
+		if (!this.ifCourseExists(course)) {
+			//throw CourseNameNotFoundException
+		}
+		if (!this.ifCurriculumExists(course, year)) {
+			//throw CurriculumNotFoundException
+		}
+		Cursor c = mDb.rawQuery("SELECT s.name, m.takeyear, m.takesem FROM nonmajors m, ssubjects s WHERE m.curriculum_id=" + this.getCurriculumID(course, year) + "m.subject_id=s.subject_id", null);
+		c.moveToFirst();
+		return this.toStringArray(c);
+	}
+	
 	
 	/**
 	 * Gets all information regarding the subjects in each curriculum
 	 * @param course - the curriculum of the specified course
 	 * @param year - the year when the curriculum takes effect
-	 * @return a Cursor with the columns: course, subject, type, units, year, semester
+	 * @return a String array containing the major and minor subjects
 	 * @throws CurriculumNotFoundException if the curriculum is not in the
 	 * @throws CourseNameNotFoundException if the course name is not in the courses table
 	 */
-	public Cursor getCurriculumSubjects(String course, int year) {
-		Cursor c = null;
-		if (this.ifCourseExists(course)) {
-			c = mDb.rawQuery("SELECT c.name AS course, e.name AS subject, f.name AS type, e.units, d.year, d.semester FROM courses c, curriculum d, subjects e, subjecttypes f WHERE d.course_id=c.course_id AND d.subject_id=e.subject_id AND e.type_id=f.type_id", null);
-		} else {
-			if (!this.ifCurriculumExists(course, year)) {
-				//throw CurriculumNotFoundException
-			}
-			//TO DO
-			//throw CourseNameNotFoundException
+	public String[] getAllCurriculumSubjects(String course, int year) {
+		String[] major = this.getAllCurriculumMajorSubjects(course, year);
+		String[] minor = this.getAllCurriculumMinorSubjects(course, year);
+		String[] ret = new String[major.length + minor.length];
+		int ctr = 0;
+		for (int i = 0; i < major.length; i++) {
+			ret[ctr] = major[i];
+			ctr++;
 		}
-		c.moveToFirst();
-		return c;
+		for (int i = 0; i < major.length; i++) {
+			ret[ctr] = minor[i];
+			ctr++;
+		}
+		return ret;
 	}
 	
 	/**
-	 * Gets number of units of the specified username, year, semester
-	 * @param username - the student's username
-	 * @param subjecttype - the type of the subject
-	 * @return a Cursor with the columns: subject, units, type, college, rating, grade, year, semester
-	 * @throws UsernameNotFoundException if the username is not in the users table
+	 * Gets number of units of the specified curriculum, year, & semester
+	 * @param course - the course of the curriculum
+	 * @param curriculumyear - the year when the curriculum is effective
+	 * @param year - the year from the curriculum to be computed for the number of units
+	 * @param semester the semester from the curriculum to be computed for the number of units
+	 * @return int - the nuumber of units for the specified semester
+	 * @throws CurriculumNotFoundException if the username is not in the users table
 	 */
-	public int getUnitsInSemester(String username, int year, int semester) {
-		Cursor c = null;
-		if (this.ifUserExists(username)) {
-			c = mDb.rawQuery("SELECT COUNT(s.units) FROM users u, takensubjects t, subjects s, subjecttypes r, colleges q WHERE u.username=t.username AND s.subject_id=t.subject_id AND s.type_id=r.type_id AND s.college_id=q.college_id AND t.year=" + year + " AND t.sem=" + semester + " ORDER BY t.year", null);
+	public int getUnitsInSemester(String course, int curriculumyear, int year, int semester) {
+		int i = 0;
+		if (this.ifCurriculumExists(course, curriculumyear)) {
+			Cursor c = mDb.rawQuery("SELECT COUNT(*) FROM majors m, ssubjects s WHERE m.subject_id=s.subject_id AND m.curriculum_id=" + this.getCurriculumID(course, curriculumyear) + " AND m.takeyear=" + year + " AND m.takesem=" + semester, null);
+			Cursor d = mDb.rawQuery("SELECT COUNT(*) FROM nonmajors m, gsubjects s WHERE m.subject_id=s.g_subject_id AND m.curriculum_id=" + this.getCurriculumID(course, curriculumyear) + " AND m.takeyear=" + year + " AND m.takesem=" + semester, null);
+			i += c.getCount();
+			i =+ d.getCount();
 		} else {
-			//TO DO
-			//throw UsernameNotFoundException
+			//throw CurriculumNotFoundException
 		}
-		c.moveToFirst();
-		return c.getInt(0);
+		return i;
 	}
 	
 	/**
@@ -994,12 +1048,10 @@ public class DbAdapter {
 	 */
 	public float getOverallGWA(String username) {
 		if (!this.ifUserExists(username)) {
-			//TO DO
 			//throw UsernameNotFoundException
 		}
 		Cursor c = this.getAllTakenSubjects(username);
 		if (c.getCount() == 0) {
-			//TO DO
 			//throw NoGradesToComputeException
 		}
 		int totalunits = 0;
@@ -1029,12 +1081,10 @@ public class DbAdapter {
 	 */
 	public float getGWAatSemester(String username, int year, int sem) {
 		if (!this.ifUserExists(username)) {
-			//TO DO
 			//throw UsernameNotFoundException
 		}
 		Cursor c = this.getAllTakenSubjects(username);
 		if (c.getCount() == 0) {
-			//TO DO
 			//throw NoGradesToComputeException
 		}
 		int totalunits = 0;
@@ -1051,10 +1101,6 @@ public class DbAdapter {
 			}
 		}
 		return sum/totalunits;
-	}
-	
-	public float getGWAperSemester(String username) {
-		return 0;
 	}
 	
 	
@@ -1087,7 +1133,7 @@ public class DbAdapter {
 	
 	/**
 	 * Adds a new subject type
-	 * @param name - Subject type name (ie. GE MST, PE, CWTS, etc.)
+	 * @param name - Subject type name
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
 	 */
 	public long addSubjectType(String name) {
@@ -1097,18 +1143,33 @@ public class DbAdapter {
 	}
 	
 	/**
+	 * Adds a new general subject
+	 * @param name - general subject name
+	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
+	 */
+	public long addGeneralSubject(String name) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(KEY_GSUBJECTS_NAME, name);
+		return mDb.insert(TABLENAMES[3], null, initialValues);
+	}
+	
+	/**
 	 * Adds a new specific subject
 	 * @param specificname - the specific Subject name (ie. CS 172, Math 17, etc.)
 	 * @param units - Subject's number of units
 	 * @param generalname - existing generalname in the gsubjects table (ie. Major, GE, PE, CWTS, etc.)
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
+	 * @throws GeneralSubjectNameNotFoundException if the generalname is not in the gsubjects table
 	 */
 	public long addSpecificSubject(String specificname, int units, String generalname) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_SSUBJECTS_NAME, specificname);
 		initialValues.put(KEY_SSUBJECTS_UNITS, units);
-		//TO DO
-		return mDb.insert(TABLENAMES[3], null, initialValues);
+		if (!this.ifGeneralSubjectExists(generalname)) {
+			//throw GeneralSubjectNameNotFoundException
+		}
+		initialValues.put(KEY_SSUBJECTS_GENERALID, this.getGeneralSubjectID(generalname));
+		return mDb.insert(TABLENAMES[4], null, initialValues);
 	}
 	
 	/**
@@ -1116,24 +1177,17 @@ public class DbAdapter {
 	 * @param name - existing subject in the subjects table
 	 * @param prerequisite - existing subject in the subjects table
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
-	 * @throws SubjectPrerequisiteMismatchException - if the subject-prerequisite pair is not in the prereqs table
-	 * @throws SubjectNameNotFoundException - if either the subject or prerequisite is not in the subjects table
+	 * @throws SubjectNameNotFoundException if either the subject or prerequisite is not in the subjects table
 	 */
 	public long addPrerequisite(String name, String prerequisite) {
 		ContentValues initialValues = new ContentValues();
 		if (this.ifSpecificSubjectExists(name) || this.ifSpecificSubjectExists(prerequisite)) {
-			if (this.ifPrerequisiteSubject(name, prerequisite)) {
-				initialValues.put(KEY_PREREQS_SUBJECTID, getSpecificSubjectID(name));
-				initialValues.put(KEY_PREREQS_PREREQID, getSpecificSubjectID(prerequisite));
-			} else {
-				//TO DO
-				//throw SubjectPrerequisiteMismatchException
-			}
+			initialValues.put(KEY_PREREQS_SUBJECTID, getSpecificSubjectID(name));
+			initialValues.put(KEY_PREREQS_PREREQID, getSpecificSubjectID(prerequisite));
 		} else {
-			//TO DO
 			//throw SubjectNameNotFoundException
 		}
-		return mDb.insert(TABLENAMES[4], null, initialValues);
+		return mDb.insert(TABLENAMES[5], null, initialValues);
 	}
 	
 	/**
@@ -1144,7 +1198,7 @@ public class DbAdapter {
 	public long addStatus(String name) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_STATUS_NAME, name);
-		return mDb.insert(TABLENAMES[5], null, initialValues);
+		return mDb.insert(TABLENAMES[6], null, initialValues);
 	}
 	
 	/**
@@ -1155,16 +1209,18 @@ public class DbAdapter {
 	 * @param realname - student's real name
 	 * @param course - existing course in the courses table
 	 * @param status - existing status is the status table
+	 * @param webmail - the student's CRS webmail
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
-	 * @throws CourseNameNotFoundException - if the course is not in the courses table
-	 * @throws StatusNotFoundException - if the status is not in the status table
+	 * @throws CourseNameNotFoundException if the course is not in the courses table
+	 * @throws StatusNotFoundException if the status is not in the status table
 	 */
-	public long addUser(String username, String password, int studentno, String realname, String course, String status) {
+	public long addUser(String username, String password, int studentno, String realname, String course, String status, String webmail) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_USERS_USERNAME, username);
 		initialValues.put(KEY_USERS_PASSWORD, password);
 		initialValues.put(KEY_USERS_STUDENTNO, studentno);
 		initialValues.put(KEY_USERS_NAME, realname);
+		initialValues.put(KEY_USERS_WEBMAIL, webmail);
 		if (this.ifCourseExists(course)) {
 			initialValues.put(KEY_USERS_COURSEID, getCourseID(course));
 		} else {
@@ -1177,7 +1233,7 @@ public class DbAdapter {
 			//TO DO
 			//throw StatusNotFoundException
 		}
-		return mDb.insert(TABLENAMES[6], null, initialValues);
+		return mDb.insert(TABLENAMES[7], null, initialValues);
 	}
 	
 	/**
@@ -1189,8 +1245,8 @@ public class DbAdapter {
 	 * @param yeartaken - the year when the subject was taken
 	 * @param semtaken - the semester when the subject was taken
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
-	 * @throws UsernameNotFoundException - if the username is not in the users table
-	 * @throws SubjectNameNotFoundException - if the subject is not in the subjects table
+	 * @throws UsernameNotFoundException if the username is not in the users table
+	 * @throws SubjectNameNotFoundException if the subject is not in the subjects table
 	 */
 	public long addTakenSubject(String username, String subject, int rating, float grade, int yeartaken, int semtaken) {
 		ContentValues initialValues = new ContentValues();
@@ -1225,7 +1281,69 @@ public class DbAdapter {
 		}
 		initialValues.put(KEY_TAKENSUBJECTS_YEAR, yeartaken);
 		initialValues.put(KEY_TAKENSUBJECTS_SEMESTER, semtaken);
-		return mDb.insert(TABLENAMES[7], null, initialValues);
+		return mDb.insert(TABLENAMES[8], null, initialValues);
+	}
+	
+	/**
+	 * Adds a new curriculum to a course
+	 * @param course - the course to be added for a new curriculum
+	 * @param year - the year when the curriculum is effective
+	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
+	 * @throws CourseNameNotFoundException if the the course is not in the courses table
+	 */
+	public long addCurriculum(String course, int year) {
+		ContentValues initialValues = new ContentValues();
+		if (!this.ifCourseExists(course)) {
+			//throw CourseNameNotFoundException
+		}
+		initialValues.put(KEY_CURRICULUM_COURSEID, this.getCourseID(course));
+		initialValues.put(KEY_CURRICULUM_YEAR, year);
+		return mDb.insert(TABLENAMES[9], null, initialValues);
+	}
+	
+	/**
+	 * Adds a corequisite to a subject
+	 * @param name - existing subject in the ssubjects table
+	 * @param corequisite - existing subject in the ssubjects table
+	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
+	 * @throws SubjectNameNotFoundException if either the subject or corequisite is not in the subjects table
+	 */
+	public long addCorequisite(String name, String corequisite) {
+		ContentValues initialValues = new ContentValues();
+		if (this.ifSpecificSubjectExists(name) || this.ifSpecificSubjectExists(corequisite)) {
+			initialValues.put(KEY_PREREQS_SUBJECTID, getSpecificSubjectID(name));
+			initialValues.put(KEY_PREREQS_PREREQID, getSpecificSubjectID(corequisite));
+		} else {
+			//throw SubjectNameNotFoundException
+		}
+		return mDb.insert(TABLENAMES[10], null, initialValues);
+	}
+	
+	public long addSession(String username) {
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(KEY_SESSION_USERNAME, username);
+		return mDb.insert(TABLENAMES[11], null, initialValues);
+	}
+	
+	/**
+	 * Adds a tag to a general subject
+	 * @param subject - the subject to be assigned to a tag
+	 * @param tag - the subject tag(type) to assign
+	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
+	 * @throws GeneralSubjectNameNotFoundException if the subject is not in the gsubjects table
+	 * @throws SubjectTypeNotFoundException if the tag is not in the subjecttypes table
+	 */
+	public long addTag(String subject, String tag) {
+		if (!this.ifGeneralSubjectExists(subject)) {
+			//throw GeneralSubjectNameNotFoundException
+		}
+		if (!this.ifSubjectTypeExists(tag)) {
+			//throw SubjectTypeNotFoundException
+		}
+		ContentValues initialValues = new ContentValues();
+		initialValues.put(KEY_TAGS_SUBJECTID, this.getGeneralSubjectID(subject));
+		initialValues.put(KEY_TAGS_TYPEID, this.getSubjectTypeID(tag));
+		return mDb.insert(TABLENAMES[12], null, initialValues);
 	}
 	
 	/**
@@ -1236,16 +1354,56 @@ public class DbAdapter {
 	 * @param yeartobetaken - the designated year the subject is to be taken based on the curriculum
 	 * @param semtobetaken - the designated semester the subject is to be taken based on the curriculum
 	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
-	 * @throws CourseNameNotFoundException - if the course is not in the courses table
+	 * @throws CourseNameNotFoundException if the course is not in the courses table
+	 * @throws CurriculumNotFoundException if the curriculum is not in the curriculum table
+	 * @throws SpecificSubjectNameNotFoundException if the subject is not in the ssubjects table
 	 */
 	public long addCurriculumMajorSubject(String course, int year, String subject, int yeartobetaken, int semtobetaken) {
-		//TO DO
-		return 0;
+		ContentValues initialValues = new ContentValues();
+		if (!this.ifCourseExists(course)) {
+			//throw CourseNameNotFoundException
+		}
+		if (!this.ifCurriculumExists(course, year)) {
+			//throw CurriculumNotFoundException
+		}
+		if (!this.ifSpecificSubjectExists(subject)) {
+			//throw SpecificSubjectNameNotFoundException
+		}
+		initialValues.put(KEY_MAJORS_CURRICULUMID, this.getCurriculumID(course, year));
+		initialValues.put(KEY_MAJORS_SUBJECTID, this.getSpecificSubjectID(subject));
+		initialValues.put(KEY_MAJORS_TAKESEM, semtobetaken);
+		initialValues.put(KEY_MAJORS_TAKEYEAR, yeartobetaken);
+		return mDb.insert(TABLENAMES[13], null, initialValues);
 	}
 	
-	public long addCurriculumNonmajorSubject(String course, int year, String subject, int yeartobetaken, int semtobetaken) {
-		//TO DO
-		return 0;
+	/**
+	 * Adds a new minor(nonmajor) subject to a course's curriculum
+	 * @param course - existing course in the courses table
+	 * @param year - the year of the curriculum to be followed
+	 * @param subject - existing subject in the subjects table CAN BE NULL
+	 * @param yeartobetaken - the designated year the subject is to be taken based on the curriculum
+	 * @param semtobetaken - the designated semester the subject is to be taken based on the curriculum
+	 * @return - the row number of the added entry, otherwise -1 if unsuccessful
+	 * @throws CourseNameNotFoundException if the course is not in the courses table
+	 * @throws CurriculumNotFoundException if the curriculum is not in the curriculum table
+	 * @throws GeneralSubjectNameNotFoundException if the subject is not in the gsubjects table
+	 */
+	public long addCurriculumMinorSubject(String course, int year, String subject, int yeartobetaken, int semtobetaken) {
+		ContentValues initialValues = new ContentValues();
+		if (!this.ifCourseExists(course)) {
+			//throw CourseNameNotFoundException
+		}
+		if (!this.ifCurriculumExists(course, year)) {
+			//throw CurriculumNotFoundException
+		}
+		if (!this.ifGeneralSubjectExists(subject)) {
+			//throw GeneralSubjectNameNotFoundException
+		}
+		initialValues.put(KEY_NONMAJORS_CURRICULUMID, this.getCurriculumID(course, year));
+		initialValues.put(KEY_NONMAJORS_SUBJECTID, this.getGeneralSubjectID(subject));
+		initialValues.put(KEY_NONMAJORS_TAKESEM, semtobetaken);
+		initialValues.put(KEY_NONMAJORS_TAKEYEAR, yeartobetaken);
+		return mDb.insert(TABLENAMES[14], null, initialValues);
 	}
 	
 	//update & set methods
@@ -1273,7 +1431,7 @@ public class DbAdapter {
 			//TO DO
 			//throw UsernameNotFoundException
 		}
-		return mDb.update(TABLENAMES[7], args, KEY_TAKENSUBJECTS_USERNAME, null) > 0;
+		return mDb.update(TABLENAMES[8], args, KEY_TAKENSUBJECTS_USERNAME, null) > 0;
 	}
 	
 	/**
@@ -1311,7 +1469,7 @@ public class DbAdapter {
 			//TO DO
 			//throw UsernameNotFoundException
 		}
-		return mDb.update(TABLENAMES[7], args, KEY_TAKENSUBJECTS_USERNAME, null) > 0;
+		return mDb.update(TABLENAMES[8], args, KEY_TAKENSUBJECTS_USERNAME, null) > 0;
 	}
 	
 	/**
@@ -1353,7 +1511,7 @@ public class DbAdapter {
 			//TO DO
 			//throw UsernameNotFoundException
 		}
-		return mDb.update(TABLENAMES[7], args, KEY_TAKENSUBJECTS_USERNAME, null) > 0;
+		return mDb.update(TABLENAMES[8], args, KEY_TAKENSUBJECTS_USERNAME, null) > 0;
 	}
 	
 	/**
@@ -1371,7 +1529,7 @@ public class DbAdapter {
 			//TO DO
 			//throw UsernameNotFoundException
 		}
-		return mDb.update(TABLENAMES[6], args, KEY_USERS_USERNAME + "=" + username, null) > 0;
+		return mDb.update(TABLENAMES[7], args, KEY_USERS_USERNAME + "=" + username, null) > 0;
 	}
 	
 	/**
@@ -1395,7 +1553,7 @@ public class DbAdapter {
 			//TO DO
 			//throw StatusNotFoundException
 		}
-		return mDb.update(TABLENAMES[6], args, KEY_USERS_USERNAME + "=" + username, null) > 0;
+		return mDb.update(TABLENAMES[7], args, KEY_USERS_USERNAME + "=" + username, null) > 0;
 	}
 
 	
@@ -1406,6 +1564,9 @@ public class DbAdapter {
 	 * @return - String array of the first column of the cursor
 	 */
 	public String[] toStringArray(Cursor c) {
+		if (c.getCount() == 0) {
+			return null;
+		}
 		String[] array = new String[c.getCount()];
 		c.moveToFirst();
 		for (int i = 0; i < array.length; i++) {
